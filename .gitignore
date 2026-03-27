@@ -9,5 +9,5 @@ docs/
 .superpowers/
 temp/
 # Ignore Python files are not Public
-find_replace.py
-find_and_display.py
+/find_replace.py
+/find_and_display.py
