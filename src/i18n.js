@@ -6,7 +6,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const LOCALES_DIR = join(__dirname, 'locales');
 
 const LANG_MAP = {
-  'Português': 'pt-BR',
+  'Português (Brasil)': 'pt-BR',
   'English': 'en',
   'Español': 'es',
 };
