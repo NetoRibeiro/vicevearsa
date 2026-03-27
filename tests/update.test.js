@@ -80,25 +80,25 @@ test('update preserves _investigations contents', async () => {
   }
 });
 
-test('update preserves departmens contents', async () => {
+test('update preserves departments contents', async () => {
   const tempDir = await mkdtemp(join(tmpdir(), 'vicevearsa-test-'));
 
   try {
     await init(tempDir, { _skipPrompts: true });
-    await mkdir(join(tempDir, 'departmens', 'my-departmen'), { recursive: true });
+    await mkdir(join(tempDir, 'departments', 'my-department'), { recursive: true });
     await writeFile(
-      join(tempDir, 'departmens', 'my-departmen', 'custom.md'),
-      'user departmen content',
+      join(tempDir, 'departments', 'my-department', 'custom.md'),
+      'user department content',
       'utf-8'
     );
 
     await update(tempDir);
 
     const content = await readFile(
-      join(tempDir, 'departmens', 'my-departmen', 'custom.md'),
+      join(tempDir, 'departments', 'my-department', 'custom.md'),
       'utf-8'
     );
-    assert.equal(content, 'user departmen content');
+    assert.equal(content, 'user department content');
   } finally {
     await rm(tempDir, { recursive: true, force: true });
   }

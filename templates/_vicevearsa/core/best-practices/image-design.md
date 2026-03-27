@@ -40,7 +40,7 @@ version: "1.0.0"
 ## Design Methodology
 
 ### 1. Load context and brief
-Read the company context file, any upstream agent output (copywriter text, strategist direction), and the departmen configuration. Identify the target platform, content format (single image, carousel, story), and the text content to be visualized.
+Read the company context file, any upstream agent output (copywriter text, strategist direction), and the department configuration. Identify the target platform, content format (single image, carousel, story), and the text content to be visualized.
 
 ### 2. Confirm design direction
 Before designing, clarify: target platform and viewport, visual mood (bold/minimal/playful/corporate), color preferences (brand colors or custom), and the number of slides or images needed. If the brief is ambiguous, ask.

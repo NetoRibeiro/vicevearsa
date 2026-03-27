@@ -1,10 +1,10 @@
-import { useDepartmenSocket } from "@/hooks/useDepartmenSocket";
-import { DepartmenSelector } from "@/components/DepartmenSelector";
+import { useDepartmentSocket } from "@/hooks/useDepartmentSocket";
+import { DepartmentSelector } from "@/components/DepartmentSelector";
 import { OfficeScene } from "@/office/OfficeScene";
 import { StatusBar } from "@/components/StatusBar";
 
 export function App() {
-  useDepartmenSocket();
+  useDepartmentSocket();
 
   return (
     <div
@@ -35,7 +35,7 @@ export function App() {
 
       {/* Main content */}
       <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
-        <DepartmenSelector />
+        <DepartmentSelector />
         <OfficeScene />
       </div>
 

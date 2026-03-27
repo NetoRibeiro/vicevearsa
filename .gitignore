@@ -1,10 +1,13 @@
 node_modules/
 .env
 *.log
-departmens/*/output/
+departments/*/output/
 _vicevearsa/_memory/company.md
 _vicevearsa/_memory/preferences.md
 _vicevearsa/_browser_profile/
 docs/
 .superpowers/
 temp/
+# Ignore Python files are not Public
+find_replace.py
+find_and_display.py

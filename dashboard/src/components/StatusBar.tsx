@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { useDepartmenStore } from "@/store/useDepartmenStore";
+import { useDepartmentStore } from "@/store/useDepartmentStore";
 import { formatElapsed } from "@/lib/formatTime";
 
 export function StatusBar() {
-  const selectedDepartmen = useDepartmenStore((s) => s.selectedDepartmen);
-  const state = useDepartmenStore((s) =>
-    s.selectedDepartmen ? s.activeStates.get(s.selectedDepartmen) : undefined
+  const selectedDepartment = useDepartmentStore((s) => s.selectedDepartment);
+  const state = useDepartmentStore((s) =>
+    s.selectedDepartment ? s.activeStates.get(s.selectedDepartment) : undefined
   );
-  const isConnected = useDepartmenStore((s) => s.isConnected);
+  const isConnected = useDepartmentStore((s) => s.isConnected);
 
   // Elapsed timer
   const [elapsed, setElapsed] = useState(0);
@@ -25,11 +25,11 @@ export function StatusBar() {
     return () => clearInterval(interval);
   }, [state?.startedAt]);
 
-  if (!selectedDepartmen || !state) {
+  if (!selectedDepartment || !state) {
     return (
       <footer style={footerStyle}>
         <span style={{ color: "var(--text-secondary)" }}>
-          Select an active departmen to monitor
+          Select an active department to monitor
         </span>
         <ConnectionDot connected={isConnected} />
       </footer>

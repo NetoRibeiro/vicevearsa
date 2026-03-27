@@ -1,12 +1,12 @@
 # Auguste-Dupin — Content Investigator Template
 
-Use this template when the Architect needs to investigate real content from reference profiles during departmen creation. Auguste-Dupin is NOT a departmen agent — it is a tool the Architect dispatches as a subagent during Phase 1.5 (Investigation) of the create-departmen workflow.
+Use this template when the Architect needs to investigate real content from reference profiles during department creation. Auguste-Dupin is NOT a department agent — it is a tool the Architect dispatches as a subagent during Phase 1.5 (Investigation) of the create-department workflow.
 
 ## Purpose
 
-When a user provides reference profile URLs during departmen discovery ("follow the style of @username"), the Architect dispatches one Auguste-Dupin subagent per profile URL. Each subagent navigates to the profile using Playwright MCP, extracts real content (captions, text, slide content, video transcriptions), and produces a structured analysis of patterns found.
+When a user provides reference profile URLs during department discovery ("follow the style of @username"), the Architect dispatches one Auguste-Dupin subagent per profile URL. Each subagent navigates to the profile using Playwright MCP, extracts real content (captions, text, slide content, video transcriptions), and produces a structured analysis of patterns found.
 
-The investigation output feeds directly into departmen data files — making agents, frameworks, quality criteria, and voice guidance grounded in real high-performing content rather than generic best practices.
+The investigation output feeds directly into department data files — making agents, frameworks, quality criteria, and voice guidance grounded in real high-performing content rather than generic best practices.
 
 ## How It Works
 
@@ -24,14 +24,14 @@ The investigation output feeds directly into departmen data files — making age
 When saving a browser screenshot as a file (using `browser_take_screenshot`), always specify the full path:
 
 ```
-departmens/{departmen-name}/_investigations/{username}/screenshots/{filename}.png
+departments/{department-name}/_investigations/{username}/screenshots/{filename}.png
 ```
 
 Never call `browser_take_screenshot` without a full output path — omitting the path saves the file to the current working directory (the repo root), polluting the project.
 
 For content reading and navigation, prefer `browser_snapshot` (returns a live view, no file saved) over `browser_take_screenshot`.
 
-The `{departmen-name}` value is always provided by the Architect in the Auguste-Dupin subagent prompt.
+The `{department-name}` value is always provided by the Architect in the Auguste-Dupin subagent prompt.
 
 ---
 
@@ -200,12 +200,12 @@ Before starting extraction, check the `investigation_mode` value from the Archit
 
 5. Download the audio for transcription using yt-dlp:
    ```bash
-   yt-dlp -x --audio-format wav -o "departmens/{departmen-name}/_investigations/{username}/reel-{id}.%(ext)s" "https://www.instagram.com/reel/{reel-id}/"
+   yt-dlp -x --audio-format wav -o "departments/{department-name}/_investigations/{username}/reel-{id}.%(ext)s" "https://www.instagram.com/reel/{reel-id}/"
    ```
 
 6. Transcribe the audio using whisper:
    ```bash
-   whisper "departmens/{departmen-name}/_investigations/{username}/reel-{id}.wav" --model small --output_dir "departmens/{departmen-name}/_investigations/{username}/" --output_format txt
+   whisper "departments/{department-name}/_investigations/{username}/reel-{id}.wav" --model small --output_dir "departments/{department-name}/_investigations/{username}/" --output_format txt
    ```
 
 7. Read the transcription file and include it in the raw content output.
@@ -310,7 +310,7 @@ Repeat the scroll-and-snapshot cycle until the target number of posts has been e
 Use yt-dlp to download auto-generated or manual subtitles:
 
 ```bash
-yt-dlp --write-auto-sub --sub-lang en --skip-download -o "departmens/{departmen-name}/_investigations/{channel}/%(id)s" "https://www.youtube.com/watch?v={video-id}"
+yt-dlp --write-auto-sub --sub-lang en --skip-download -o "departments/{department-name}/_investigations/{channel}/%(id)s" "https://www.youtube.com/watch?v={video-id}"
 ```
 
 If subtitles are available, read the `.vtt` or `.srt` file and extract the text content (strip timestamps).
@@ -320,11 +320,11 @@ If subtitles are available, read the `.vtt` or `.srt` file and extract the text 
 If no subtitles are available, download the audio and transcribe:
 
 ```bash
-yt-dlp -x --audio-format wav -o "departmens/{departmen-name}/_investigations/{channel}/%(id)s.%(ext)s" "https://www.youtube.com/watch?v={video-id}"
+yt-dlp -x --audio-format wav -o "departments/{department-name}/_investigations/{channel}/%(id)s.%(ext)s" "https://www.youtube.com/watch?v={video-id}"
 ```
 
 ```bash
-whisper "departmens/{departmen-name}/_investigations/{channel}/{video-id}.wav" --model small --output_dir "departmens/{departmen-name}/_investigations/{channel}/" --output_format txt
+whisper "departments/{department-name}/_investigations/{channel}/{video-id}.wav" --model small --output_dir "departments/{department-name}/_investigations/{channel}/" --output_format txt
 ```
 
 Read the transcription file and include it in the raw content output.
@@ -527,7 +527,7 @@ Auguste-Dupin produces three output files per investigation. The first two are p
 
 ### Raw Content File: `raw-content.md`
 
-One file per profile, saved to `departmens/{departmen-name}/_investigations/{username}/raw-content.md`.
+One file per profile, saved to `departments/{department-name}/_investigations/{username}/raw-content.md`.
 
 ```markdown
 # Raw Content: @{username} ({platform})
@@ -673,7 +673,7 @@ Full transcription text goes here, paragraph by paragraph.
 
 ### Pattern Analysis File: `pattern-analysis.md`
 
-One file per profile, saved to `departmens/{departmen-name}/_investigations/{username}/pattern-analysis.md`.
+One file per profile, saved to `departments/{department-name}/_investigations/{username}/pattern-analysis.md`.
 
 ```markdown
 # Pattern Analysis: @{username} ({platform})
@@ -768,9 +768,9 @@ Patterns found in below-average posts:
 - [Pattern]: These posts averaged [X]% lower engagement. Possible reason: [hypothesis]
 - [Pattern]: These posts averaged [X]% lower engagement. Possible reason: [hypothesis]
 
-## Recommendations for Departmen
+## Recommendations for Department
 
-Five specific, actionable recommendations for how the departmen should incorporate
+Five specific, actionable recommendations for how the department should incorporate
 patterns from this creator's content:
 
 1. **[Recommendation title]**: [Detailed recommendation with specific examples
@@ -788,10 +788,10 @@ patterns from this creator's content:
 
 ### Consolidated Analysis File: `consolidated-analysis.md`
 
-One file per investigation (across all profiles), saved to `departmens/{departmen-name}/_investigations/consolidated-analysis.md`.
+One file per investigation (across all profiles), saved to `departments/{department-name}/_investigations/consolidated-analysis.md`.
 
 ```markdown
-# Consolidated Investigation: {departmen-name}
+# Consolidated Investigation: {department-name}
 
 Investigated: {YYYY-MM-DD}
 Total profiles analyzed: {N}
@@ -845,7 +845,7 @@ What makes each profile's approach unique (not shared with others):
 ## Recommended Framework
 
 A synthesized framework based on the best patterns found across all profiles.
-This framework becomes the operational blueprint for the departmen.
+This framework becomes the operational blueprint for the department.
 
 ### Structure Template
 The recommended content structure, synthesized from the highest-performing
@@ -894,7 +894,7 @@ The 3 most effective CTA patterns found:
 
 ### Anti-Patterns
 Patterns that were absent from successful content or present in underperforming
-content. These become "never do" rules for the departmen:
+content. These become "never do" rules for the department:
 
 1. [Anti-pattern]: Found in [N] underperforming posts, absent from top performers.
 2. [Anti-pattern]: Found in [N] underperforming posts, absent from top performers.
@@ -906,11 +906,11 @@ content. These become "never do" rules for the departmen:
 
 ## How the Architect Uses Auguste-Dupin Output
 
-After the investigation completes, the Architect maps findings to departmen data files during Phase 3 (Extraction). Each departmen data file is enriched with real-world evidence from the investigation.
+After the investigation completes, the Architect maps findings to department data files during Phase 3 (Extraction). Each department data file is enriched with real-world evidence from the investigation.
 
-### Mapping: Investigation Output to Departmen Data Files
+### Mapping: Investigation Output to Department Data Files
 
-| Investigation Section | Departmen Data File | What Gets Extracted |
+| Investigation Section | Department Data File | What Gets Extracted |
 |---|---|---|
 | Highest-engagement raw content | `pipeline/data/output-examples.md` | Real posts reformatted as gold-standard examples for the writer agent |
 | Anti-Patterns from consolidated analysis | `pipeline/data/anti-patterns.md` | Patterns absent from successful content become "never do" rules |
@@ -926,7 +926,7 @@ Beyond data files, investigation output enriches individual agent definitions:
 - **Writer agent persona**: Operational Framework includes real hook patterns and structure templates from the investigation. Voice Guidance uses the vocabulary signature. Output Examples are adapted from real high-performing content.
 - **Reviewer agent persona**: Quality Criteria are calibrated against real engagement metrics from investigated profiles. The reviewer knows what "high-performing" looks like because it has seen real examples.
 - **Researcher agent persona**: The research brief includes first-party data from the investigation, making the researcher's benchmarks grounded in real content, not just industry averages.
-- **Ideator agent persona** (content departmens): Hook templates and angle patterns from the investigation feed directly into the ideator's framework for generating viral angles.
+- **Ideator agent persona** (content departments): Hook templates and angle patterns from the investigation feed directly into the ideator's framework for generating viral angles.
 
 ### Priority Rules
 
@@ -934,7 +934,7 @@ When investigation data conflicts with web research data:
 
 1. Investigation data (first-party, real content) takes priority over web research (third-party, aggregated)
 2. Patterns found across multiple investigated profiles carry more weight than single-profile patterns
-3. The Architect notes the source of each data point in the departmen data files: "[Source: Investigation — @username]" vs "[Source: Web research — URL]"
+3. The Architect notes the source of each data point in the department data files: "[Source: Investigation — @username]" vs "[Source: Web research — URL]"
 
 ---
 
@@ -993,12 +993,12 @@ For LinkedIn:
 
 ### Smart Recommendations
 
-Auguste-Dupin recommends extraction settings based on the departmen type:
+Auguste-Dupin recommends extraction settings based on the department type:
 
-- **Content creation departmens** (writing, copywriting, posts): Recommend "Carousels + Reels" on Instagram, "Threads only" on Twitter, "Long-form posts" on LinkedIn. These content types have the highest signal for writing patterns.
-- **Video departmens** (YouTube, TikTok, Reels): Recommend "Reels only" on Instagram, "Most recent videos" on YouTube. Focus on video content and transcriptions.
-- **Strategy/analysis departmens**: Recommend "All types" with "deep dive" quantity. Maximum data for pattern analysis.
-- **General departmens**: Recommend "standard" quantity with "all types." Balanced approach.
+- **Content creation departments** (writing, copywriting, posts): Recommend "Carousels + Reels" on Instagram, "Threads only" on Twitter, "Long-form posts" on LinkedIn. These content types have the highest signal for writing patterns.
+- **Video departments** (YouTube, TikTok, Reels): Recommend "Reels only" on Instagram, "Most recent videos" on YouTube. Focus on video content and transcriptions.
+- **Strategy/analysis departments**: Recommend "All types" with "deep dive" quantity. Maximum data for pattern analysis.
+- **General departments**: Recommend "standard" quantity with "all types." Balanced approach.
 
 ### Timeout and Error Handling
 

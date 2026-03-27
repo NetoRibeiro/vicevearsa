@@ -1,5 +1,5 @@
 ---
-description: ViceVearsa — Multi-agent orchestration framework. Create and run AI departmens.
+description: ViceVearsa — Multi-agent orchestration framework. Create and run AI departments.
 ---
 
 Activate the ViceVearsa system. Read `.cursor/rules/vicevearsa.mdc` for full instructions, then follow the Initialization and Command Routing steps defined there.

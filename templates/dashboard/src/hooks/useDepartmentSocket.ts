@@ -1,21 +1,21 @@
 import { useEffect, useRef } from "react";
-import { useDepartmenStore } from "@/store/useDepartmenStore";
+import { useDepartmentStore } from "@/store/useDepartmentStore";
 import type { WsMessage } from "@/types/state";
 
 const RECONNECT_BASE_MS = 1000;
 const RECONNECT_MAX_MS = 30000;
 
-export function useDepartmenSocket() {
+export function useDepartmentSocket() {
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectDelayRef = useRef(RECONNECT_BASE_MS);
 
   const {
     setConnected,
     setSnapshot,
-    setDepartmenActive,
-    updateDepartmenState,
-    setDepartmenInactive,
-  } = useDepartmenStore();
+    setDepartmentActive,
+    updateDepartmentState,
+    setDepartmentInactive,
+  } = useDepartmentStore();
 
   useEffect(() => {
     let disposed = false;
@@ -25,7 +25,7 @@ export function useDepartmenSocket() {
       if (disposed) return;
 
       const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-      const ws = new WebSocket(`${protocol}//${window.location.host}/__departmens_ws`);
+      const ws = new WebSocket(`${protocol}//${window.location.host}/__departments_ws`);
       wsRef.current = ws;
 
       ws.onopen = () => {
@@ -38,16 +38,16 @@ export function useDepartmenSocket() {
           const msg: WsMessage = JSON.parse(event.data);
           switch (msg.type) {
             case "SNAPSHOT":
-              setSnapshot(msg.departmens, msg.activeStates);
+              setSnapshot(msg.departments, msg.activeStates);
               break;
-            case "DEPARTMEN_ACTIVE":
-              setDepartmenActive(msg.departmen, msg.state);
+            case "DEPARTMENT_ACTIVE":
+              setDepartmentActive(msg.department, msg.state);
               break;
-            case "DEPARTMEN_UPDATE":
-              updateDepartmenState(msg.departmen, msg.state);
+            case "DEPARTMENT_UPDATE":
+              updateDepartmentState(msg.department, msg.state);
               break;
-            case "DEPARTMEN_INACTIVE":
-              setDepartmenInactive(msg.departmen);
+            case "DEPARTMENT_INACTIVE":
+              setDepartmentInactive(msg.department);
               break;
           }
         } catch {
@@ -80,5 +80,5 @@ export function useDepartmenSocket() {
       clearTimeout(reconnectTimer);
       wsRef.current?.close();
     };
-  }, [setConnected, setSnapshot, setDepartmenActive, updateDepartmenState, setDepartmenInactive]);
+  }, [setConnected, setSnapshot, setDepartmentActive, updateDepartmentState, setDepartmentInactive]);
 }

@@ -27,7 +27,7 @@ const PROTECTED_PATHS = [
   '_vicevearsa/_memory',
   '_vicevearsa/_investigations',
   'agents',
-  'departmens',
+  'departments',
 ];
 
 function isProtected(relativePath) {

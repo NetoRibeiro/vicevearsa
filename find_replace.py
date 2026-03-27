@@ -2,33 +2,14 @@ import os
 
 project_folder = os.getcwd()  # Get the current working directory as the project folder
 
-# Ensure project_folder is defined, if not, set a default
-# This assumes project_folder was defined in a previous cell like 'project_folder = "/content/vicevearsa"'
-# If it's not, you might need to adjust this or define it explicitly.
-if 'project_folder' not in locals():
-    project_folder = '/content/vicevearsa'
-
 print(f"Performing find and replace in project folder: {project_folder}")
 
 replacements = {
-    "vicevearsa": "vicevearsa",
-    "ViceVearsa": "ViceVearsa",
-    "departmens": "departmens",
-    "Departmens": "Departmens",
-    "departmen": "departmen",
-    "Departmen": "Departmen",
-    "DEPARTMENS": "DEPARTMENS",
-    "DEPARTMEN": "DEPARTMEN",
-    "Auguste-Dupin CSI": "Auguste-Dupin CSI",
-    "Neto Ribeiro": "Neto Ribeiro",
-    "netoribeiro": "netoribeiro",
-    "auguste.dupin.prompt": "auguste.dupin.prompt",
-    "/Users/neto/": "/Users/neto/",
-    "Auguste-Dupin": "Auguste-Dupin",
-    "auguste-dupin": "auguste-dupin",
-    "departmen-party.csv": "departmen-party.csv",
-    "departmen-party.csv": "departmen-party.csv"
+    "department": "department",
+    "Department": "Department",
+    "DEPARTMENT": "DEPARTMENT"
 }
+
 
 def replace_in_file(filepath, replacements):
     """Reads a file, performs replacements, and writes back if content changed."""

@@ -1,14 +1,14 @@
-import { useDepartmenStore } from "@/store/useDepartmenStore";
-import { DepartmenCard } from "./DepartmenCard";
+import { useDepartmentStore } from "@/store/useDepartmentStore";
+import { DepartmentCard } from "./DepartmentCard";
 
-export function DepartmenSelector() {
-  const departmens = useDepartmenStore((s) => s.departmens);
-  const activeStates = useDepartmenStore((s) => s.activeStates);
-  const selectedDepartmen = useDepartmenStore((s) => s.selectedDepartmen);
-  const selectDepartmen = useDepartmenStore((s) => s.selectDepartmen);
+export function DepartmentSelector() {
+  const departments = useDepartmentStore((s) => s.departments);
+  const activeStates = useDepartmentStore((s) => s.activeStates);
+  const selectedDepartment = useDepartmentStore((s) => s.selectedDepartment);
+  const selectDepartment = useDepartmentStore((s) => s.selectDepartment);
 
-  // Sort: active departmens first, then alphabetical
-  const departmenList = Array.from(departmens.values()).sort((a, b) => {
+  // Sort: active departments first, then alphabetical
+  const departmentList = Array.from(departments.values()).sort((a, b) => {
     const aActive = activeStates.has(a.code) ? 0 : 1;
     const bActive = activeStates.has(b.code) ? 0 : 1;
     if (aActive !== bActive) return aActive - bActive;
@@ -38,21 +38,21 @@ export function DepartmenSelector() {
           color: "var(--text-secondary)",
         }}
       >
-        Departmens
+        Departments
       </div>
       <div style={{ flex: 1, overflowY: "auto" }}>
-        {departmenList.length === 0 && (
+        {departmentList.length === 0 && (
           <div style={{ padding: "16px 12px", color: "var(--text-secondary)", fontSize: 12 }}>
-            No departmens found
+            No departments found
           </div>
         )}
-        {departmenList.map((departmen) => (
-          <DepartmenCard
-            key={departmen.code}
-            departmen={departmen}
-            state={activeStates.get(departmen.code)}
-            isSelected={selectedDepartmen === departmen.code}
-            onSelect={() => selectDepartmen(departmen.code)}
+        {departmentList.map((department) => (
+          <DepartmentCard
+            key={department.code}
+            department={department}
+            state={activeStates.get(department.code)}
+            isSelected={selectedDepartment === department.code}
+            onSelect={() => selectDepartment(department.code)}
           />
         ))}
       </div>

@@ -23,7 +23,7 @@
   "updateStartingUnknown": "Atualizando ViceVearsa (versão desconhecida) → {new}...",
   "updatedFile": "📄 Atualizado {path}",
   "updateSuccess": "✅ ViceVearsa {version} instalado com sucesso!",
-  "updatePreserved": "✓ Preservado: _memory/, _investigations/, departmens/",
+  "updatePreserved": "✓ Preservado: _memory/, _investigations/, departments/",
   "updateFileCount": "✓ Atualizados: {count} arquivos do sistema",
   "updateLatestHint": "💡 Dica: Use 'npx vicevearsa@latest update' para sempre obter a versão mais recente.",
   "skillsNotInitialized": "Instalação ViceVearsa não encontrada. Execute 'init' primeiro.",

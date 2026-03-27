@@ -1,6 +1,6 @@
 ---
 name: vicevearsa-skill-creator
-description: Create new ViceVearsa skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill for their departmens, update or optimize an existing skill, run evals to test a skill, or benchmark skill performance. Supports all ViceVearsa skill types: MCP integrations, custom scripts, hybrid, and behavioral prompts.
+description: Create new ViceVearsa skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill for their departments, update or optimize an existing skill, run evals to test a skill, or benchmark skill performance. Supports all ViceVearsa skill types: MCP integrations, custom scripts, hybrid, and behavioral prompts.
 ---
 
 # ViceVearsa Skill Creator
@@ -47,7 +47,7 @@ It's OK to briefly explain terms if you're in doubt, and feel free to clarify te
 Start by understanding the user's intent. The current conversation might already contain a workflow the user wants to capture (e.g., they say "turn this into a skill"). If so, extract answers from the conversation history first — the tools used, the sequence of steps, corrections the user made, input/output formats observed. The user may need to fill the gaps, and should confirm before proceeding to the next step.
 
 1. What should this skill enable agents to do?
-2. When should this skill be used? (what user phrases/contexts/departmen scenarios)
+2. When should this skill be used? (what user phrases/contexts/department scenarios)
 3. What's the expected output format?
 4. Should we set up test cases to verify the skill works? Skills with objectively verifiable outputs (file transforms, data extraction, code generation, fixed workflow steps) benefit from test cases. Skills with subjective outputs (writing style, art) often don't need them. Suggest the appropriate default based on the skill type, but let the user decide.
 
@@ -190,7 +190,7 @@ For each test case, spawn two subagents in the same turn — one with the skill,
 
 **With-skill run:**
 
-The with-skill run simulates how a ViceVearsa agent operates with this skill injected into its context. The skill's SKILL.md body gets appended to the agent's instructions, just like the pipeline runner does during actual departmen execution.
+The with-skill run simulates how a ViceVearsa agent operates with this skill injected into its context. The skill's SKILL.md body gets appended to the agent's instructions, just like the pipeline runner does during actual department execution.
 
 ```
 Execute this task:

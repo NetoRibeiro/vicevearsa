@@ -28,7 +28,7 @@ categories: [assets, images, ai, generation]
 Use the Image Generator when you need to create visual assets from text prompts. This skill calls the Openrouter API with AI image generation models and saves the resulting images locally.
 
 **IMPORTANT: Think twice before generating images.** Image generation costs money and takes time. Before generating:
-1. Check if a suitable image already exists in the departmen's assets folder
+1. Check if a suitable image already exists in the department's assets folder
 2. Check if a web search could find a free/open image that works
 3. Consider if the image is truly necessary for the content quality
 4. Only generate when no existing alternative is good enough
@@ -57,7 +57,7 @@ Use the Image Generator when you need to create visual assets from text prompts.
 ```bash
 python3 skills/image-generator/scripts/generate.py \
   --prompt "A detailed description of the image to generate" \
-  --output "departmens/{departmen}/output/{run_id}/assets/image-name.jpg" \
+  --output "departments/{department}/output/{run_id}/assets/image-name.jpg" \
   --mode test
 ```
 
@@ -68,8 +68,8 @@ Use `--reference` to send a local image to the model as visual context. The mode
 ```bash
 python3 skills/image-generator/scripts/generate.py \
   --prompt "A social media banner featuring the company logo prominently in the center" \
-  --output "departmens/{departmen}/output/{run_id}/assets/banner.jpg" \
-  --reference "departmens/{departmen}/assets/logo.png" \
+  --output "departments/{department}/output/{run_id}/assets/banner.jpg" \
+  --reference "departments/{department}/assets/logo.png" \
   --mode production
 ```
 
@@ -79,7 +79,7 @@ Supported reference formats: PNG, JPEG, WEBP, GIF.
 
 ```bash
 python3 skills/image-generator/scripts/generate.py \
-  --batch "departmens/{departmen}/output/{run_id}/assets/batch.json" \
+  --batch "departments/{department}/output/{run_id}/assets/batch.json" \
   --mode production
 ```
 

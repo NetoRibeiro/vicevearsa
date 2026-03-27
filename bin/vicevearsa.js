@@ -47,8 +47,8 @@ if (command === 'init') {
   const result = await agentsCli(subcommand, args, process.cwd());
   if (!result.success) process.exitCode = 1;
 } else if (command === 'runs') {
-  const departmenName = positionals[1] || null;
-  const runs = await listRuns(departmenName, process.cwd());
+  const departmentName = positionals[1] || null;
+  const runs = await listRuns(departmentName, process.cwd());
   printRuns(runs);
 } else {
   console.log(`
@@ -65,7 +65,7 @@ if (command === 'init') {
     npx vicevearsa agents install <name>   Install a predefined agent
     npx vicevearsa agents remove <name>    Remove an agent
     npx vicevearsa agents update           Update all agents
-    npx vicevearsa runs [departmen-name]     View execution history
+    npx vicevearsa runs [department-name]     View execution history
 
   Learn more: https://github.com/netoribeiro/vicevearsa
   `);

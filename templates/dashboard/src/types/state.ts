@@ -27,15 +27,15 @@ export interface Handoff {
   completedAt: string;
 }
 
-export type DepartmenStatus =
+export type DepartmentStatus =
   | "idle"
   | "running"
   | "completed"
   | "checkpoint";
 
-export interface DepartmenState {
-  departmen: string;
-  status: DepartmenStatus;
+export interface DepartmentState {
+  department: string;
+  status: DepartmentStatus;
   step: {
     current: number;
     total: number;
@@ -47,8 +47,8 @@ export interface DepartmenState {
   updatedAt: string;
 }
 
-// Departmen metadata from departmen.yaml
-export interface DepartmenInfo {
+// Department metadata from department.yaml
+export interface DepartmentInfo {
   code: string;
   name: string;
   description: string;
@@ -58,7 +58,7 @@ export interface DepartmenInfo {
 
 // WebSocket messages
 export type WsMessage =
-  | { type: "SNAPSHOT"; departmens: DepartmenInfo[]; activeStates: Record<string, DepartmenState> }
-  | { type: "DEPARTMEN_ACTIVE"; departmen: string; state: DepartmenState }
-  | { type: "DEPARTMEN_UPDATE"; departmen: string; state: DepartmenState }
-  | { type: "DEPARTMEN_INACTIVE"; departmen: string };
+  | { type: "SNAPSHOT"; departments: DepartmentInfo[]; activeStates: Record<string, DepartmentState> }
+  | { type: "DEPARTMENT_ACTIVE"; department: string; state: DepartmentState }
+  | { type: "DEPARTMENT_UPDATE"; department: string; state: DepartmentState }
+  | { type: "DEPARTMENT_INACTIVE"; department: string };

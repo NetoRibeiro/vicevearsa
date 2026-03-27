@@ -47,7 +47,7 @@ Understand this before checking anything:
   Currently: `bin/`, `src/`, `agents/`, `skills/`, `templates/`.
 
 - **`src/update.js:PROTECTED_PATHS`** → Directories NEVER overwritten during update:
-  `_vicevearsa/_memory`, `_vicevearsa/_investigations`, `agents`, `departmens`.
+  `_vicevearsa/_memory`, `_vicevearsa/_investigations`, `agents`, `departments`.
 
 ## Multi-IDE Architecture
 
@@ -161,7 +161,7 @@ For each changed **multi-file** skill:
    - `_vicevearsa/_memory` (user preferences and company context)
    - `_vicevearsa/_investigations` (Auguste-Dupin CSI data)
    - `agents` (user-installed/customized agents)
-   - `departmens` (user-created departmens)
+   - `departments` (user-created departments)
 4. If a new user-owned top-level directory was added to the project,
    check if it should be in PROTECTED_PATHS
 

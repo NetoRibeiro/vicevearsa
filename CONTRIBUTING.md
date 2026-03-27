@@ -28,7 +28,7 @@ Antes de começar, assista ao [vídeo de lançamento](https://www.youtube.com/wa
 
 ## A Regra de Ouro: Verticalize, Não Complique
 
-A maneira certa de contribuir é **verticalizando**: criando novas skills, agents, departmens e guias de best practices que expandem o que o vicevearsa pode fazer para empresas e criadores de conteúdo.
+A maneira certa de contribuir é **verticalizando**: criando novas skills, agents, departments e guias de best practices que expandem o que o vicevearsa pode fazer para empresas e criadores de conteúdo.
 
 O vicevearsa roda com `npx vicevearsa init` e pronto. Um gerente de equipe, um dono de empresa, um criador de conteúdo precisa conseguir usar sem ser técnico. Queremos manter essa simplicidade.
 
@@ -41,7 +41,7 @@ O framework é intencionalmente baseado em arquivos e leve em dependências.
 - **Novas skills** - Integrações com plataformas, APIs, serviços (o principal tipo de contribuição)
 - **Novos guias de best practices** - Expertise de domínio: copywriting, design, SEO, email marketing, redes sociais, análise de dados...
 - **Novos agents** - Definições reutilizáveis de agentes especializados
-- **Templates de departmens** - Departmens prontos para casos de uso comuns que a comunidade pode importar e usar
+- **Templates de departments** - Departments prontos para casos de uso comuns que a comunidade pode importar e usar
 - **Bug fixes** - Correções de comportamento quebrado
 - **Melhorias de performance** - Tornar funcionalidades existentes mais rápidas
 - **Documentação** - Melhorias no README, exemplos, guias
@@ -66,7 +66,7 @@ Exemplos do que geralmente não se encaixa:
 
 ## Ideias de contribuição
 
-Não sabe por onde começar? Aqui estão algumas ideias de skills e departmens que a comunidade adoraria ter:
+Não sabe por onde começar? Aqui estão algumas ideias de skills e departments que a comunidade adoraria ter:
 
 **Skills:**
 - `tiktok-publisher` - Publicar vídeos no TikTok via API
@@ -89,11 +89,11 @@ Não sabe por onde começar? Aqui estão algumas ideias de skills e departmens q
 - Roteiros para podcasts
 - Apresentações e pitch decks
 
-**Departmens prontos:**
-- Departmen de produção de conteúdo para LinkedIn
-- Departmen de geração de leads por email
-- Departmen de análise de métricas de redes sociais
-- Departmen de criação de materiais de treinamento
+**Departments prontos:**
+- Department de produção de conteúdo para LinkedIn
+- Department de geração de leads por email
+- Department de análise de métricas de redes sociais
+- Department de criação de materiais de treinamento
 
 ## Primeira contribuição
 
@@ -143,13 +143,13 @@ O vicevearsa já vem com guias de copywriting, design de carrosséis, SEO e mais
 
 Após criar, registre o guia no [`_vicevearsa/core/best-practices/_catalog.yaml`](_vicevearsa/core/best-practices/_catalog.yaml). Verifique se já não existe um guia similar antes de criar.
 
-### Criando um Departmen Template
+### Criando um Department Template
 
-Departmens prontos que a comunidade pode importar e usar direto. Para contribuir com um departmen template:
+Departments prontos que a comunidade pode importar e usar direto. Para contribuir com um department template:
 
-1. Crie o departmen usando `/vicevearsa create`
+1. Crie o department usando `/vicevearsa create`
 2. Teste-o pelo menos 2-3 vezes para garantir que funciona bem
-3. Coloque na pasta `departmens/` do seu PR com uma descrição no `departmen.yaml`
+3. Coloque na pasta `departments/` do seu PR com uma descrição no `department.yaml`
 
 ### Bug Fixes & Performance
 
@@ -259,13 +259,13 @@ Seja respeitoso, construtivo e colaborativo. Estamos aqui para construir algo in
 
 Thanks for your interest in contributing! vicevearsa is a multi-agent orchestration framework **focused on automating real business work** - generating social media content, creating carousels, turning long videos into short clips, writing tutorials, planning product launches. It is not a software development framework.
 
-vicevearsa's strength comes from the **ecosystem** - skills, agents, departmens, and best-practice guides - not from framework complexity.
+vicevearsa's strength comes from the **ecosystem** - skills, agents, departments, and best-practice guides - not from framework complexity.
 
 Before you start, watch the [launch video](https://www.youtube.com/watch?v=CL1ppI4qHeU) and read the [README](README.md) to understand the project.
 
 ## The Golden Rule: Verticalize, Don't Complicate
 
-The right way to contribute is by **verticalizing**: creating new skills, agents, departmens, and best-practice guides that expand what vicevearsa can do for businesses and content creators.
+The right way to contribute is by **verticalizing**: creating new skills, agents, departments, and best-practice guides that expand what vicevearsa can do for businesses and content creators.
 
 vicevearsa runs with `npx vicevearsa init` and that's it.
 
@@ -278,7 +278,7 @@ The framework is intentionally file-based and dependency-light. **This is by des
 - **New skills** - Platform integrations, APIs, services (the primary contribution type)
 - **New best-practice guides** - Domain expertise: copywriting, design, SEO, email marketing, social media, data analysis...
 - **New agents** - Reusable specialized agent definitions
-- **Departmen templates** - Ready-to-use departmens for common use cases that the community can import and use
+- **Department templates** - Ready-to-use departments for common use cases that the community can import and use
 - **Bug fixes** - Fixing actual broken behavior
 - **Performance improvements** - Making existing features faster
 - **Documentation** - README improvements, examples, guides
@@ -303,7 +303,7 @@ Examples of what generally doesn't fit:
 
 ## Contribution Ideas
 
-Not sure where to start? Here are some skills and departmens the community would love to have:
+Not sure where to start? Here are some skills and departments the community would love to have:
 
 **Skills:**
 - `tiktok-publisher` - Publish videos to TikTok via API
@@ -326,11 +326,11 @@ Not sure where to start? Here are some skills and departmens the community would
 - Podcast scripts
 - Presentations and pitch decks
 
-**Ready-to-use departmens:**
-- LinkedIn content production departmen
-- Email lead generation departmen
-- Social media metrics analysis departmen
-- Training materials creation departmen
+**Ready-to-use departments:**
+- LinkedIn content production department
+- Email lead generation department
+- Social media metrics analysis department
+- Training materials creation department
 
 ## First Contribution
 
@@ -380,13 +380,13 @@ vicevearsa ships with guides for copywriting, carousel design, SEO, and more. Bu
 
 After creating, register the guide in [`_vicevearsa/core/best-practices/_catalog.yaml`](_vicevearsa/core/best-practices/_catalog.yaml). Check for overlap with existing guides before creating a new one.
 
-### Creating a Departmen Template
+### Creating a Department Template
 
-Ready-to-use departmens that the community can import and use right away. To contribute a departmen template:
+Ready-to-use departments that the community can import and use right away. To contribute a department template:
 
-1. Create the departmen using `/vicevearsa create`
+1. Create the department using `/vicevearsa create`
 2. Test it at least 2-3 times to make sure it works well
-3. Place it in the `departmens/` folder of your PR with a description in `departmen.yaml`
+3. Place it in the `departments/` folder of your PR with a description in `department.yaml`
 
 ### Bug Fixes & Performance
 

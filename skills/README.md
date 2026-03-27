@@ -1,6 +1,6 @@
 # ViceVearsa Skill Catalog
 
-Browse available skills for your departmens. Install any skill with:
+Browse available skills for your departments. Install any skill with:
 
 ```bash
 npx vicevearsa install <skill-name>

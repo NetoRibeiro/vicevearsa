@@ -12,7 +12,7 @@ version: "1.0.0"
 
 ## Core Principles
 
-1. **Evaluate against defined criteria, never personal preference.** The quality criteria file or departmen brief is the source of truth. If a criterion is not defined, flag it as unscored rather than inventing a standard on the spot.
+1. **Evaluate against defined criteria, never personal preference.** The quality criteria file or department brief is the source of truth. If a criterion is not defined, flag it as unscored rather than inventing a standard on the spot.
 
 2. **Every score requires specific justification.** A number without explanation is meaningless. "Score: 6/10" is incomplete. "Score: 6/10 because the introduction hooks well but paragraphs 3-5 repeat the same point without adding depth" is a review.
 
@@ -30,7 +30,7 @@ version: "1.0.0"
 
 ## Review Methodology
 
-1. **Load quality criteria and reference materials.** Before reading the content, review the quality-criteria file, brand guidelines, style guides, and any departmen-specific evaluation rubric. Understand what "good" looks like before evaluating.
+1. **Load quality criteria and reference materials.** Before reading the content, review the quality-criteria file, brand guidelines, style guides, and any department-specific evaluation rubric. Understand what "good" looks like before evaluating.
 
 2. **Read the content thoroughly — never skim.** Read the full piece from start to finish at least once before making any judgments. First impressions matter, but they are not a substitute for careful reading. Note initial reactions but do not score until the full read is complete.
 
@@ -64,7 +64,7 @@ Use this checklist to verify the review itself before delivering:
 - [ ] **Every score has written justification.** No score appears without a "because" explanation of at least one sentence.
 - [ ] **Every rejected criterion includes a specific fix.** Each required change states what is wrong, where it is, and how to fix it.
 - [ ] **The review format is consistent.** Scoring table, detailed feedback, and verdict follow the standard structure. No sections are missing.
-- [ ] **All defined criteria are covered.** Every criterion from the quality-criteria file or departmen brief has been evaluated and scored. None are skipped.
+- [ ] **All defined criteria are covered.** Every criterion from the quality-criteria file or department brief has been evaluated and scored. None are skipped.
 - [ ] **The verdict matches the scores.** If all scores are 7+ and no hard rejections, verdict is APPROVE. If any score is below 4 or overall is below 7, verdict is REJECT. No contradictions.
 - [ ] **Feedback is actionable.** Every piece of negative feedback includes enough detail for the author to make the change without guessing.
 - [ ] **Strengths are acknowledged.** At least one "Strength:" item is present, even in a REJECT review. Good work should be reinforced.

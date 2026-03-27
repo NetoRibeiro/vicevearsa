@@ -23,13 +23,13 @@ test('init creates _vicevearsa directory structure', async () => {
   }
 });
 
-test('init creates empty departmens directory', async () => {
+test('init creates empty departments directory', async () => {
   const tempDir = await mkdtemp(join(tmpdir(), 'vicevearsa-test-'));
 
   try {
     await init(tempDir, { _skipPrompts: true });
 
-    await stat(join(tempDir, 'departmens'));
+    await stat(join(tempDir, 'departments'));
   } finally {
     await rm(tempDir, { recursive: true, force: true });
   }

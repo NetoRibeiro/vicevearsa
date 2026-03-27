@@ -1,14 +1,14 @@
-import type { DepartmenInfo, DepartmenState } from "@/types/state";
+import type { DepartmentInfo, DepartmentState } from "@/types/state";
 import { StatusBadge } from "./StatusBadge";
 
-interface DepartmenCardProps {
-  departmen: DepartmenInfo;
-  state: DepartmenState | undefined;
+interface DepartmentCardProps {
+  department: DepartmentInfo;
+  state: DepartmentState | undefined;
   isSelected: boolean;
   onSelect: () => void;
 }
 
-export function DepartmenCard({ departmen, state, isSelected, onSelect }: DepartmenCardProps) {
+export function DepartmentCard({ department, state, isSelected, onSelect }: DepartmentCardProps) {
   const isActive = !!state;
   const status = state?.status ?? "inactive";
 
@@ -33,9 +33,9 @@ export function DepartmenCard({ departmen, state, isSelected, onSelect }: Depart
       }}
     >
       <StatusBadge status={status} />
-      <span style={{ marginRight: 4 }}>{departmen.icon}</span>
+      <span style={{ marginRight: 4 }}>{department.icon}</span>
       <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-        {departmen.name}
+        {department.name}
       </span>
       {state?.step && (
         <span style={{ fontSize: 11, color: "var(--text-secondary)" }}>
