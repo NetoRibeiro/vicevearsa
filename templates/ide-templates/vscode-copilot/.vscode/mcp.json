@@ -1,0 +1,8 @@
+{
+  "servers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest", "--config", "_vicevearsa/config/playwright.config.json"]
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/neto/.claude/plugins//**)",
+      "Read(//c/Users/neto/.claude/plugins/**)",
+      "Read(//c/Users/neto/.claude/**)"
+    ]
+  },
+  "outputStyle": "default"
+}
