@@ -262,7 +262,14 @@ Apply this transformation consistently for every write in this step.
 - Save the user's choice/response for the next step
 - **If the step frontmatter contains `outputFile`**: after collecting the user's full response,
   apply the Output Path Transformation **Step 1 only** (run_id injection — skip Step 2, version folder) to the `outputFile` path, then write the response to the transformed path using the Write tool before moving to the next step. Checkpoint files are user input captures, not versioned output — Step 2 does not apply here, regardless of the general "every write" rule in the Output Path Transformation section above.
-  Use this format:
+
+  **IMPORTANT (Windows/PowerShell)**: Always use the **full absolute path** when writing checkpoint files. Construct the path as:
+  ```
+  {project-root}/departments/{name}/output/{run_id}/{filename}
+  ```
+  Where `{project-root}` is the absolute path to the ViceVearsa project directory (e.g., `C:\Users\Neto\projects\vicevearsa`).
+
+  Use this format for the checkpoint content:
   ```
   # Research Focus
 
