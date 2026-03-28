@@ -7,40 +7,40 @@ import fsp from "node:fs/promises";
 import { watch as chokidarWatch } from "chokidar";
 import path from "node:path";
 import { parse as parseYaml } from "yaml";
-import type { DepartmenInfo, DepartmenState, WsMessage } from "../types/state";
+import type { DepartmentInfo, DepartmentState, WsMessage } from "../types/state";
 
-function resolveDepartmensDir(): string {
+function resolveDepartmentsDir(): string {
   const candidates = [
-    path.resolve(process.cwd(), "../departmens"),  // started from dashboard/
-    path.resolve(process.cwd(), "departmens"),     // started from project root
+    path.resolve(process.cwd(), "../departments"),  // started from dashboard/
+    path.resolve(process.cwd(), "departments"),     // started from project root
   ];
   for (const c of candidates) {
     if (fs.existsSync(c)) return c;
   }
-  return path.resolve(process.cwd(), "../departmens"); // default (will be created on demand)
+  return path.resolve(process.cwd(), "../departments"); // default (will be created on demand)
 }
 
-async function discoverDepartmens(departmensDir: string): Promise<DepartmenInfo[]> {
+async function discoverDepartments(departmentsDir: string): Promise<DepartmentInfo[]> {
   let entries;
   try {
-    entries = await fsp.readdir(departmensDir, { withFileTypes: true });
+    entries = await fsp.readdir(departmentsDir, { withFileTypes: true });
   } catch {
     return [];
   }
 
-  const departmens: DepartmenInfo[] = [];
+  const departments: DepartmentInfo[] = [];
 
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
     if (entry.name.startsWith(".") || entry.name.startsWith("_")) continue;
 
-    const yamlPath = path.join(departmensDir, entry.name, "departmen.yaml");
+    const yamlPath = path.join(departmentsDir, entry.name, "department.yaml");
     try {
       const raw = await fsp.readFile(yamlPath, "utf-8");
       const parsed = parseYaml(raw);
-      const s = parsed?.departmen;
+      const s = parsed?.department;
       if (s) {
-        departmens.push({
+        departments.push({
           code: typeof s.code === "string" ? s.code : entry.name,
           name: typeof s.name === "string" ? s.name : entry.name,
           description: typeof s.description === "string" ? s.description : "",
@@ -50,10 +50,10 @@ async function discoverDepartmens(departmensDir: string): Promise<DepartmenInfo[
         continue;
       }
     } catch {
-      // No departmen.yaml or invalid YAML — fall through to default
+      // No department.yaml or invalid YAML — fall through to default
     }
 
-    departmens.push({
+    departments.push({
       code: entry.name,
       name: entry.name,
       description: "",
@@ -62,10 +62,10 @@ async function discoverDepartmens(departmensDir: string): Promise<DepartmenInfo[
     });
   }
 
-  return departmens;
+  return departments;
 }
 
-function isValidState(data: unknown): data is DepartmenState {
+function isValidState(data: unknown): data is DepartmentState {
   if (!data || typeof data !== "object") return false;
   const d = data as Record<string, unknown>;
   return (
@@ -75,19 +75,19 @@ function isValidState(data: unknown): data is DepartmenState {
   );
 }
 
-async function readActiveStates(departmensDir: string): Promise<Record<string, DepartmenState>> {
-  const states: Record<string, DepartmenState> = {};
+async function readActiveStates(departmentsDir: string): Promise<Record<string, DepartmentState>> {
+  const states: Record<string, DepartmentState> = {};
 
   let entries;
   try {
-    entries = await fsp.readdir(departmensDir, { withFileTypes: true });
+    entries = await fsp.readdir(departmentsDir, { withFileTypes: true });
   } catch {
     return states;
   }
 
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
-    const statePath = path.join(departmensDir, entry.name, "state.json");
+    const statePath = path.join(departmentsDir, entry.name, "state.json");
 
     try {
       const raw = await fsp.readFile(statePath, "utf-8");
@@ -103,11 +103,11 @@ async function readActiveStates(departmensDir: string): Promise<Record<string, D
   return states;
 }
 
-async function buildSnapshot(departmensDir: string): Promise<WsMessage> {
+async function buildSnapshot(departmentsDir: string): Promise<WsMessage> {
   return {
     type: "SNAPSHOT",
-    departmens: await discoverDepartmens(departmensDir),
-    activeStates: await readActiveStates(departmensDir),
+    departments: await discoverDepartments(departmentsDir),
+    activeStates: await readActiveStates(departmentsDir),
   };
 }
 
@@ -124,22 +124,22 @@ function broadcast(wss: WebSocketServer, msg: WsMessage) {
   }
 }
 
-export function departmenWatcherPlugin(): Plugin {
+export function departmentWatcherPlugin(): Plugin {
   return {
-    name: "departmen-watcher",
+    name: "department-watcher",
     configureServer(server: ViteDevServer) {
       if (!server.httpServer) {
-        server.config.logger.warn("[departmen-watcher] no httpServer — skipping");
+        server.config.logger.warn("[department-watcher] no httpServer — skipping");
         return;
       }
 
-      const departmensDir = resolveDepartmensDir();
-      server.config.logger.info(`[departmen-watcher] departmens dir: ${departmensDir}`);
+      const departmentsDir = resolveDepartmentsDir();
+      server.config.logger.info(`[department-watcher] departments dir: ${departmentsDir}`);
 
       // Create WebSocket server with noServer to avoid intercepting Vite's HMR
       const wss = new WebSocketServer({ noServer: true });
       (server.httpServer as Server).on("upgrade", (req: IncomingMessage, socket: Duplex, head: Buffer) => {
-        if (req.url === "/__departmens_ws") {
+        if (req.url === "/__departments_ws") {
           wss.handleUpgrade(req, socket, head, (ws) => {
             wss.emit("connection", ws, req);
           });
@@ -150,23 +150,23 @@ export function departmenWatcherPlugin(): Plugin {
       // Send snapshot on new connection
       wss.on("connection", async (ws) => {
         try {
-          const snap = await buildSnapshot(departmensDir);
+          const snap = await buildSnapshot(departmentsDir);
           ws.send(JSON.stringify(snap));
         } catch {
           // Connection may have closed before snapshot was ready
         }
       });
 
-      // Ensure departmens directory exists
-      fsp.mkdir(departmensDir, { recursive: true }).catch((err) => {
-        server.config.logger.error(`[departmen-watcher] failed to create departmens dir: ${err.message}`);
+      // Ensure departments directory exists
+      fsp.mkdir(departmentsDir, { recursive: true }).catch((err) => {
+        server.config.logger.error(`[department-watcher] failed to create departments dir: ${err.message}`);
       });
 
       // REST API fallback — serves snapshot over HTTP for polling clients
       server.middlewares.use(async (req, res, next) => {
         if (req.url !== "/api/snapshot") return next();
         try {
-          const snapshot = await buildSnapshot(departmensDir);
+          const snapshot = await buildSnapshot(departmentsDir);
           res.setHeader("Content-Type", "application/json");
           res.setHeader("Cache-Control", "no-cache");
           res.end(JSON.stringify(snapshot));
@@ -177,7 +177,7 @@ export function departmenWatcherPlugin(): Plugin {
       });
 
       // File watcher using chokidar — reliable cross-platform, handles partial writes
-      const watcher = chokidarWatch(departmensDir, {
+      const watcher = chokidarWatch(departmentsDir, {
         ignoreInitial: true,
         awaitWriteFinish: { stabilityThreshold: 300, pollInterval: 50 },
         ignored: [/(^|[/\\])\./, /node_modules/, /output[/\\]/],
@@ -185,38 +185,38 @@ export function departmenWatcherPlugin(): Plugin {
       });
 
       function handleFileChange(filePath: string) {
-        const relative = path.relative(departmensDir, filePath).replace(/\\/g, "/");
+        const relative = path.relative(departmentsDir, filePath).replace(/\\/g, "/");
         const parts = relative.split("/");
         if (parts.length < 2) return;
 
-        const departmenName = parts[0];
+        const departmentName = parts[0];
         const fileName = parts[1];
 
         if (fileName === "state.json") {
           fsp.readFile(filePath, "utf-8").then((raw) => {
             const parsed = JSON.parse(raw);
             if (!isValidState(parsed)) return;
-            broadcast(wss, { type: "DEPARTMEN_UPDATE", departmen: departmenName, state: parsed });
+            broadcast(wss, { type: "DEPARTMENT_UPDATE", department: departmentName, state: parsed });
           }).catch(() => {
             // Invalid JSON — next change event will retry
           });
-        } else if (fileName === "departmen.yaml") {
-          buildSnapshot(departmensDir).then((snap) => broadcast(wss, snap));
+        } else if (fileName === "department.yaml") {
+          buildSnapshot(departmentsDir).then((snap) => broadcast(wss, snap));
         }
       }
 
       function handleFileRemoval(filePath: string) {
-        const relative = path.relative(departmensDir, filePath).replace(/\\/g, "/");
+        const relative = path.relative(departmentsDir, filePath).replace(/\\/g, "/");
         const parts = relative.split("/");
         if (parts.length < 2) return;
 
-        const departmenName = parts[0];
+        const departmentName = parts[0];
         const fileName = parts[1];
 
         if (fileName === "state.json") {
-          broadcast(wss, { type: "DEPARTMEN_INACTIVE", departmen: departmenName });
-        } else if (fileName === "departmen.yaml") {
-          buildSnapshot(departmensDir).then((snap) => broadcast(wss, snap));
+          broadcast(wss, { type: "DEPARTMENT_INACTIVE", department: departmentName });
+        } else if (fileName === "department.yaml") {
+          buildSnapshot(departmentsDir).then((snap) => broadcast(wss, snap));
         }
       }
 

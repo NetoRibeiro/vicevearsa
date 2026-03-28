@@ -3,16 +3,16 @@ import { join } from 'node:path';
 
 const MAX_RUNS = 20;
 
-export async function listRuns(departmenName, targetDir = process.cwd()) {
-  const departmensDir = join(targetDir, 'departmens');
-  let departmenNames;
+export async function listRuns(departmentName, targetDir = process.cwd()) {
+  const departmentsDir = join(targetDir, 'departments');
+  let departmentNames;
 
   try {
-    if (departmenName) {
-      departmenNames = [departmenName];
+    if (departmentName) {
+      departmentNames = [departmentName];
     } else {
-      const entries = await readdir(departmensDir, { withFileTypes: true });
-      departmenNames = entries.filter((e) => e.isDirectory()).map((e) => e.name);
+      const entries = await readdir(departmentsDir, { withFileTypes: true });
+      departmentNames = entries.filter((e) => e.isDirectory()).map((e) => e.name);
     }
   } catch {
     return [];
@@ -20,8 +20,8 @@ export async function listRuns(departmenName, targetDir = process.cwd()) {
 
   const runs = [];
 
-  for (const name of departmenNames) {
-    const outputDir = join(departmensDir, name, 'output');
+  for (const name of departmentNames) {
+    const outputDir = join(departmentsDir, name, 'output');
     let runDirs;
     try {
       const entries = await readdir(outputDir, { withFileTypes: true });
@@ -31,7 +31,7 @@ export async function listRuns(departmenName, targetDir = process.cwd()) {
     }
 
     for (const runId of runDirs) {
-      const run = { departmen: name, runId, status: 'unknown', steps: null, duration: null };
+      const run = { department: name, runId, status: 'unknown', steps: null, duration: null };
 
       try {
         const raw = await readFile(join(outputDir, runId, 'state.json'), 'utf-8');
@@ -73,11 +73,11 @@ export function printRuns(runs) {
     return;
   }
 
-  let currentDepartmen = null;
+  let currentDepartment = null;
   for (const run of runs) {
-    if (run.departmen !== currentDepartmen) {
-      currentDepartmen = run.departmen;
-      console.log(`\n  ${currentDepartmen}`);
+    if (run.department !== currentDepartment) {
+      currentDepartment = run.department;
+      console.log(`\n  ${currentDepartment}`);
       console.log('  ' + '─'.repeat(50));
     }
     const parts = [`    ${run.runId}`];

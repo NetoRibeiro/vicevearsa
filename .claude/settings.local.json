@@ -3,7 +3,18 @@
     "allow": [
       "Read(//c/Users/neto/.claude/plugins//**)",
       "Read(//c/Users/neto/.claude/plugins/**)",
-      "Read(//c/Users/neto/.claude/**)"
+      "Read(//c/Users/neto/.claude/**)",
+      "Bash(npm test:*)",
+      "Bash(__NEW_LINE_2f604f0e0d5be642__ echo:*)",
+      "Bash(echo \"  - bin/vicevearsa.js updated\" echo \"\" echo \"✓ Tests Created:\" ls -1 /c/VearsaCore/vicevearsa/tests/bundle*.test.js echo \"\" echo \"✓ Documentation:\" ls -1 /c/VearsaCore/vicevearsa/docs/bundling.md echo \"\" echo \"✓ Project Instructions Updated:\" grep -c \"bundle\\\\|Bundling\" /c/VearsaCore/vicevearsa/CLAUDE.md)",
+      "Bash(node --test tests/approval.test.js)",
+      "Bash(node --test tests/approval-metrics.test.js)",
+      "Bash(npm run:*)",
+      "Bash(node -e \"require\\(''fs''\\).writeFileSync\\(''templates/_vicevearsa/.vicevearsa-version'', ''1.1.0\\\\n''\\)\")",
+      "Bash(grep '\"\"version\"\"' package.json)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git reset:*)"
     ]
   },
   "outputStyle": "default"

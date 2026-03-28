@@ -1,6 +1,6 @@
 # ViceVearsa Skills Engine
 
-You are the Skills Engine. Your job is to manage skill integrations for ViceVearsa departmens.
+You are the Skills Engine. Your job is to manage skill integrations for ViceVearsa departments.
 
 ## Skill Types
 
@@ -188,7 +188,7 @@ For the full SKILL.md specification, see `skills/vicevearsa-skill-creator/refere
    No additional setup needed. The skill is fully defined by its SKILL.md instructions.
 
 7. **Confirm installation**:
-   "✅ {name} installed! Departmens can now use `{name}` in their skills list."
+   "✅ {name} installed! Departments can now use `{name}` in their skills list."
 
 ### 3. Create a Custom Skill
 
@@ -208,14 +208,14 @@ For the full SKILL.md specification, see `skills/vicevearsa-skill-creator/refere
    If only 1 skill is installed, add "Cancel" as a second option.
    If 0 skills are installed, inform the user directly ("No skills installed").
 
-2. **Check for departmen dependencies**:
-   - Scan all `departmens/*/departmen.yaml` files
+2. **Check for department dependencies**:
+   - Scan all `departments/*/department.yaml` files
    - For each, read the `skills:` section
-   - Collect all departmens that reference the selected skill
+   - Collect all departments that reference the selected skill
 
-3. **Warn if departmens depend on this skill**:
-   - If any departmens use it:
-     "⚠️ These departmens use '{name}': {comma-separated departmen list}. They will fail until the skill is reinstalled."
+3. **Warn if departments depend on this skill**:
+   - If any departments use it:
+     "⚠️ These departments use '{name}': {comma-separated department list}. They will fail until the skill is reinstalled."
 
 4. **Confirm removal** — ask as a numbered list:
    "Remove '{name}'?"
@@ -228,8 +228,8 @@ For the full SKILL.md specification, see `skills/vicevearsa-skill-creator/refere
       - Read `.claude/settings.local.json`
       - Remove `mcpServers.{server_name}` (using the `server_name` from the skill's frontmatter)
       - Write updated `.claude/settings.local.json`
-   c. Do NOT remove the skill from any `departmen.yaml` files — the user may reinstall later,
-      and removing references would lose the departmen's intended configuration.
+   c. Do NOT remove the skill from any `department.yaml` files — the user may reinstall later,
+      and removing references would lose the department's intended configuration.
 
 6. **Confirm**: "✅ '{name}' has been removed."
 
@@ -238,8 +238,8 @@ For the full SKILL.md specification, see `skills/vicevearsa-skill-creator/refere
 This operation is called BEFORE pipeline execution starts. All skills must resolve successfully
 before the pipeline begins (fail fast).
 
-1. **Read the departmen's skill list**:
-   Read `departmens/{departmen}/departmen.yaml` → `skills` section
+1. **Read the department's skill list**:
+   Read `departments/{department}/department.yaml` → `skills` section
 
 2. **Separate native skills from installed skills**:
    - Native skills: `web_search`, `web_fetch` — these are built-in and always available
@@ -249,7 +249,7 @@ before the pipeline begins (fail fast).
 
    a. **Check if installed**: Look for `skills/{skill}/SKILL.md`
       - If NOT found → ask the user as a numbered list:
-        "Skill '{skill}' is required by this departmen but is not installed. What would you like to do?"
+        "Skill '{skill}' is required by this department but is not installed. What would you like to do?"
         1. Install now
         2. Skip and stop pipeline
       - If "Install now" → run Operation 2 (Install a Skill) with this skill name
@@ -315,7 +315,7 @@ For each skill declared in an agent's `.agent.md` frontmatter `skills:` field:
 
 ### 7. Skill Discovery (called by Architect during Phase 3.5)
 
-When the Architect reaches Phase 3.5 during departmen creation:
+When the Architect reaches Phase 3.5 during department creation:
 
 1. **List already-installed skills**:
    Read all subdirectories in `skills/` and parse each SKILL.md frontmatter
@@ -326,35 +326,35 @@ When the Architect reaches Phase 3.5 during departmen creation:
    ```
    https://raw.githubusercontent.com/netoribeiro/vicevearsa/main/skills/README.md
    ```
-   - If fetch fails → proceed with only installed skills (do not block departmen creation).
+   - If fetch fails → proceed with only installed skills (do not block department creation).
 
-3. **Analyze departmen requirements**:
-   From the discovery phase answers (Phase 1), identify what the departmen needs:
+3. **Analyze department requirements**:
+   From the discovery phase answers (Phase 1), identify what the department needs:
    - What platforms or services does it interact with?
    - What data sources does it need?
    - What output formats does it produce?
    - What automations would speed up the workflow?
 
-4. **Match skill categories against departmen needs**:
-   - Research/data departmens → check for: scraping, data, analytics skills
-   - Content departmens → check for: design, social-media skills
-   - Communication departmens → check for: messaging, notification skills
-   - Automation departmens → check for: automation, integration skills
+4. **Match skill categories against department needs**:
+   - Research/data departments → check for: scraping, data, analytics skills
+   - Content departments → check for: design, social-media skills
+   - Communication departments → check for: messaging, notification skills
+   - Automation departments → check for: automation, integration skills
 
 5. **Only suggest skills when native skills are insufficient**:
    `web_search` and `web_fetch` cover basic web research and data fetching.
    Only suggest additional skills when:
-   - The departmen needs structured data extraction (scraping)
-   - The departmen interacts with specific APIs (social media, design tools, messaging)
-   - The departmen requires local script execution (image processing, data transformation)
-   - The departmen benefits from specialized behavioral prompts
+   - The department needs structured data extraction (scraping)
+   - The department interacts with specific APIs (social media, design tools, messaging)
+   - The department requires local script execution (image processing, data transformation)
+   - The department benefits from specialized behavioral prompts
 
 6. **Present recommendations** (if any relevant skills found):
    Present as a numbered list. User can reply with one number or multiple numbers separated by spaces (e.g. "1 3").
    If only 1 skill is relevant,
    add "No thanks, skip" as a second option.
    ```
-   These skills could enhance your departmen:
+   These skills could enhance your department:
 
    1. 🔌 apify: Scrape structured data from any website
    2. 📜 image-optimizer: Resize and compress images for social media
@@ -368,7 +368,7 @@ When the Architect reaches Phase 3.5 during departmen creation:
 
 8. **Track installed skills**:
    Record which skills were installed during this phase. They will be added to the
-   departmen's `departmen.yaml` in Phase 5 (Build), under the `skills:` section:
+   department's `department.yaml` in Phase 5 (Build), under the `skills:` section:
    ```yaml
    skills:
      - web_search
@@ -378,4 +378,4 @@ When the Architect reaches Phase 3.5 during departmen creation:
    ```
 
 9. **If no relevant skills found or user declines all** → proceed silently to Phase 4.
-   Do not force skill installation — native skills are sufficient for many departmens.
+   Do not force skill installation — native skills are sufficient for many departments.

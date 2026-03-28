@@ -11,8 +11,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Quick Start for Users
 
 Type `/vicevearsa` to open the main menu, or use any of these commands:
-- `/vicevearsa create` — Create a new departmen
-- `/vicevearsa run <name>` — Run a departmen
+- `/vicevearsa create` — Create a new department
+- `/vicevearsa run <name>` — Run a department
 - `/vicevearsa help` — See all commands
 
 ## Development Setup
@@ -53,8 +53,11 @@ The ViceVearsa framework is organized into these key modules:
 - **`src/skills.js`** — Manages skill installation, removal, and updates
 - **`src/skills-cli.js`** — CLI interface for skill management (`install`, `remove`, `update`)
 - **`src/agents-cli.js`** — CLI interface for agent management
-- **`src/runs.js`** — Tracks execution history and departmen runs
+- **`src/runs.js`** — Tracks execution history and department runs
 - **`src/update.js`** — Updates the ViceVearsa core framework
+- **`src/bundle.js`** — Bundles departments into self-contained packages for sharing
+- **`src/bundle-detector.js`** — Detects execution mode (bundled vs. project) and resolves paths accordingly
+- **`src/export.js`** — CLI wrapper for department bundling and export operations
 - **`src/logger.js`** — Logging utilities for CLI output
 - **`src/i18n.js`** — Internationalization support
 
@@ -69,9 +72,9 @@ When initialized in a project:
 - `_vicevearsa/` — ViceVearsa core files (do not modify manually)
 - `_vicevearsa/_memory/` — Persistent memory (company context, preferences)
 - `skills/` — Installed skills (integrations, scripts, prompts)
-- `departmens/` — User-created departmens
-- `departmens/{name}/_investigations/` — Auguste-Dupin content investigations (profile analyses)
-- `departmens/{name}/output/` — Generated content and files
+- `departments/` — User-created departments
+- `departments/{name}/_investigations/` — Auguste-Dupin content investigations (profile analyses)
+- `departments/{name}/output/` — Generated content and files
 - `_vicevearsa/_browser_profile/` — Persistent browser sessions (login cookies, localStorage)
 
 ### Templates (Distribution)
@@ -83,11 +86,32 @@ When initialized in a project:
 ## How It Works (User Perspective)
 
 1. The `/vicevearsa` skill is the entry point for all interactions
-2. The **Architect** agent creates and modifies departmens
-3. During departmen creation, the **Auguste-Dupin** investigator can analyze reference profiles (Instagram, YouTube, Twitter/X, LinkedIn) to extract real content patterns
-4. The **Pipeline Runner** executes departmens automatically
+2. The **Architect** agent creates and modifies departments
+3. During department creation, the **Auguste-Dupin** investigator can analyze reference profiles (Instagram, YouTube, Twitter/X, LinkedIn) to extract real content patterns
+4. The **Pipeline Runner** executes departments automatically
 5. Agents communicate via persona switching (inline) or subagents (background)
 6. Checkpoints pause execution for user input/approval
+
+## Bundling & Sharing Departments
+
+Departments can be bundled into self-contained packages and shared with colleagues:
+
+```bash
+# Create a bundle
+npx vicevearsa bundle my-department
+
+# Recipients can run it directly
+cd my-department
+npx vicevearsa run
+```
+
+Bundles include:
+- Complete orchestration (all agents, pipeline, skills)
+- Company context and preferences
+- Execution memory and learnings
+- All necessary dependencies
+
+**See `docs/bundling.md` for comprehensive guide on bundling and sharing departments.**
 
 ## Framework Distribution & Packaging
 
@@ -110,6 +134,8 @@ The project uses Node's built-in test runner (`node --test`). Tests are organize
 - **init.test.js** — Initialization process
 - **update.test.js** — Update mechanism and version management
 - **runs.test.js** — Execution history tracking
+- **bundle.test.js** — Bundle generation, structure, and path rewriting
+- **bundle-detector.test.js** — Bundle detection and path resolution
 - **logger.test.js** — Log output formatting
 - **i18n.test.js** — Internationalization
 
@@ -119,8 +145,8 @@ When adding features, add corresponding tests in the `tests/` directory. All tes
 
 - Always use `/vicevearsa` commands to interact with the system
 - Do not manually edit files in `_vicevearsa/core/` unless you know what you're doing
-- Departmen YAML files can be edited manually if needed, but prefer using `/vicevearsa edit`
-- Company context in `_vicevearsa/_memory/company.md` is loaded for every departmen run
+- Department YAML files can be edited manually if needed, but prefer using `/vicevearsa edit`
+- Company context in `_vicevearsa/_memory/company.md` is loaded for every department run
 
 ## Rules for Developers
 

@@ -1,7 +1,9 @@
 import { Application, extend } from "@pixi/react";
 import { Container, Graphics } from "pixi.js";
-import { useCallback, useMemo } from "react";
-import { useDepartmenStore } from "@/store/useDepartmenStore";
+import { useCallback, useMemo, useState } from "react";
+import { useDepartmentStore } from "@/store/useDepartmentStore";
+import { useDepartmentSocket } from "@/hooks/useDepartmentSocket";
+import { ApprovalMemo } from "@/components/ApprovalMemo";
 import { AgentDesk, CELL_W, CELL_H, GRID_OFFSET_X, GRID_OFFSET_Y } from "./AgentDesk";
 import { HandoffEnvelope } from "./HandoffEnvelope";
 import { sortAgentsByDesk, findAgent } from "@/lib/normalizeState";
@@ -16,12 +18,59 @@ const MIN_STAGE_W = 400;
 const MIN_STAGE_H = 320;
 
 export function OfficeScene() {
-  const state = useDepartmenStore((s) =>
-    s.selectedDepartmen ? s.activeStates.get(s.selectedDepartmen) : undefined
+  const state = useDepartmentStore((s) =>
+    s.selectedDepartment ? s.activeStates.get(s.selectedDepartment) : undefined
   );
-  const departmenInfo = useDepartmenStore((s) =>
-    s.selectedDepartmen ? s.departmens.get(s.selectedDepartmen) : undefined
+  const departmentInfo = useDepartmentStore((s) =>
+    s.selectedDepartment ? s.departments.get(s.selectedDepartment) : undefined
   );
+  const selectedDepartment = useDepartmentStore((s) => s.selectedDepartment);
+  const { sendApprovalResponse } = useDepartmentSocket();
+
+  const [selectedApprovalAgentId, setSelectedApprovalAgentId] = useState<string | null>(null);
+
+  const handleDeskClick = useCallback((agentId: string) => {
+    setSelectedApprovalAgentId(agentId);
+  }, []);
+
+  const handleApprove = useCallback(() => {
+    if (!selectedApprovalAgentId || !selectedDepartment || !state) return;
+    const agent = findAgent(state, selectedApprovalAgentId);
+    if (!agent?.approval) return;
+
+    sendApprovalResponse({
+      type: "APPROVAL_RESPONSE",
+      department: selectedDepartment,
+      agentId: selectedApprovalAgentId,
+      step: agent.approval.step,
+      action: "approve",
+      respondedAt: new Date().toISOString(),
+    });
+
+    setSelectedApprovalAgentId(null);
+  }, [selectedApprovalAgentId, selectedDepartment, state, sendApprovalResponse]);
+
+  const handleRevise = useCallback((instruction: string) => {
+    if (!selectedApprovalAgentId || !selectedDepartment || !state) return;
+    const agent = findAgent(state, selectedApprovalAgentId);
+    if (!agent?.approval) return;
+
+    sendApprovalResponse({
+      type: "APPROVAL_RESPONSE",
+      department: selectedDepartment,
+      agentId: selectedApprovalAgentId,
+      step: agent.approval.step,
+      action: "revise",
+      instruction,
+      respondedAt: new Date().toISOString(),
+    });
+
+    setSelectedApprovalAgentId(null);
+  }, [selectedApprovalAgentId, selectedDepartment, state, sendApprovalResponse]);
+
+  const handleCloseApprovalMemo = useCallback(() => {
+    setSelectedApprovalAgentId(null);
+  }, []);
 
   const agents = useMemo(
     () => (state?.agents ? sortAgentsByDesk(state.agents) : []),
@@ -105,19 +154,23 @@ export function OfficeScene() {
           gap: 8,
         }}
       >
-        {departmenInfo ? (
+        {departmentInfo ? (
           <>
-            <span style={{ fontSize: 40 }}>{departmenInfo.icon}</span>
-            <span style={{ fontSize: 16 }}>{departmenInfo.name}</span>
-            <span style={{ fontSize: 12 }}>{departmenInfo.description}</span>
+            <span style={{ fontSize: 40 }}>{departmentInfo.icon}</span>
+            <span style={{ fontSize: 16 }}>{departmentInfo.name}</span>
+            <span style={{ fontSize: 12 }}>{departmentInfo.description}</span>
             <span style={{ fontSize: 11, marginTop: 8 }}>Not running</span>
           </>
         ) : (
-          <span>Select a departmen to monitor</span>
+          <span>Select a department to monitor</span>
         )}
       </div>
     );
   }
+
+  // Get selected agent's approval data for the memo
+  const selectedAgent = selectedApprovalAgentId ? findAgent(state, selectedApprovalAgentId) : null;
+  const selectedApproval = selectedAgent?.approval;
 
   return (
     <div style={{ flex: 1, overflow: "auto", display: "flex", alignItems: "flex-start", justifyContent: "center" }}>
@@ -125,7 +178,7 @@ export function OfficeScene() {
         <pixiContainer scale={SCENE_SCALE}>
           <pixiGraphics draw={drawBackground} />
           {agents.map((agent, i) => (
-            <AgentDesk key={agent.id} agent={agent} agentIndex={i} />
+            <AgentDesk key={agent.id} agent={agent} agentIndex={i} onDeskClick={handleDeskClick} />
           ))}
           {state.handoff &&
             (() => {
@@ -142,6 +195,18 @@ export function OfficeScene() {
             })()}
         </pixiContainer>
       </Application>
+
+      {/* Approval Memo Popup */}
+      {selectedApproval && selectedAgent && selectedDepartment && (
+        <ApprovalMemo
+          agent={selectedAgent}
+          approval={selectedApproval}
+          department={selectedDepartment}
+          onApprove={handleApprove}
+          onRevise={handleRevise}
+          onClose={handleCloseApprovalMemo}
+        />
+      )}
     </div>
   );
 }

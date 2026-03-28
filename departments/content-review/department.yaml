@@ -1,0 +1,16 @@
+# Content Review Department
+# A demo department showcasing the approval system
+
+code: content-review
+name: Content Review Studio
+description: Review and approve content with dashboard feedback
+icon: 👁️
+
+agents:
+  - researcher: ./agents/researcher.agent.md
+  - writer: ./agents/writer.agent.md
+
+skills:
+  - web_search
+
+company: ../_vicevearsa/_memory/company.md

@@ -1,0 +1,7 @@
+# Content Review Pipeline
+# Demonstrates the approval system
+
+steps:
+  - research
+  - write
+  - review

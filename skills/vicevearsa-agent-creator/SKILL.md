@@ -142,7 +142,7 @@ The Best-Practice Creator workflow (above) handles the initial `whenToUse` cross
 
 ### When updating a best-practice file's `whenToUse` scope
 
-This is the most impactful change — it affects how the Architect selects best practices during departmen creation.
+This is the most impactful change — it affects how the Architect selects best practices during department creation.
 
 1. Document the old scope and new scope
 2. Update the best-practice file's `whenToUse` field

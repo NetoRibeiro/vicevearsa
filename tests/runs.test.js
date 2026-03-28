@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { listRuns, formatDuration } from '../src/runs.js';
 
-test('listRuns returns empty array when no departmens exist', async () => {
+test('listRuns returns empty array when no departments exist', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'osq-runs-'));
   try {
     const runs = await listRuns(null, dir);
@@ -18,10 +18,10 @@ test('listRuns returns empty array when no departmens exist', async () => {
 test('listRuns finds state.json in output directories', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'osq-runs-'));
   try {
-    const runDir = join(dir, 'departmens', 'my-departmen', 'output', '2026-03-17-120000');
+    const runDir = join(dir, 'departments', 'my-department', 'output', '2026-03-17-120000');
     await mkdir(runDir, { recursive: true });
     await writeFile(join(runDir, 'state.json'), JSON.stringify({
-      departmen: 'my-departmen',
+      department: 'my-department',
       status: 'completed',
       step: { current: 3, total: 3 },
       startedAt: '2026-03-17T12:00:00Z',
@@ -30,28 +30,28 @@ test('listRuns finds state.json in output directories', async () => {
 
     const runs = await listRuns(null, dir);
     assert.equal(runs.length, 1);
-    assert.equal(runs[0].departmen, 'my-departmen');
+    assert.equal(runs[0].department, 'my-department');
     assert.equal(runs[0].status, 'completed');
   } finally {
     await rm(dir, { recursive: true, force: true });
   }
 });
 
-test('listRuns filters by departmen name', async () => {
+test('listRuns filters by department name', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'osq-runs-'));
   try {
-    for (const name of ['departmen-a', 'departmen-b']) {
-      const runDir = join(dir, 'departmens', name, 'output', '2026-03-17-120000');
+    for (const name of ['department-a', 'department-b']) {
+      const runDir = join(dir, 'departments', name, 'output', '2026-03-17-120000');
       await mkdir(runDir, { recursive: true });
       await writeFile(join(runDir, 'state.json'), JSON.stringify({
-        departmen: name, status: 'completed', step: { current: 1, total: 1 },
+        department: name, status: 'completed', step: { current: 1, total: 1 },
         startedAt: '2026-03-17T12:00:00Z', completedAt: '2026-03-17T12:01:00Z',
       }), 'utf-8');
     }
 
-    const runs = await listRuns('departmen-a', dir);
+    const runs = await listRuns('department-a', dir);
     assert.equal(runs.length, 1);
-    assert.equal(runs[0].departmen, 'departmen-a');
+    assert.equal(runs[0].department, 'department-a');
   } finally {
     await rm(dir, { recursive: true, force: true });
   }
@@ -60,7 +60,7 @@ test('listRuns filters by departmen name', async () => {
 test('listRuns returns unknown for runs without state.json', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'osq-runs-'));
   try {
-    const runDir = join(dir, 'departmens', 'my-departmen', 'output', '2026-03-17-120000');
+    const runDir = join(dir, 'departments', 'my-department', 'output', '2026-03-17-120000');
     await mkdir(runDir, { recursive: true });
 
     const runs = await listRuns(null, dir);
@@ -74,7 +74,7 @@ test('listRuns returns unknown for runs without state.json', async () => {
 test('listRuns handles malformed state.json', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'osq-runs-'));
   try {
-    const runDir = join(dir, 'departmens', 'my-departmen', 'output', '2026-03-17-120000');
+    const runDir = join(dir, 'departments', 'my-department', 'output', '2026-03-17-120000');
     await mkdir(runDir, { recursive: true });
     await writeFile(join(runDir, 'state.json'), 'not json', 'utf-8');
 
@@ -90,10 +90,10 @@ test('listRuns sorts by runId descending', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'osq-runs-'));
   try {
     for (const ts of ['2026-03-17-100000', '2026-03-17-120000', '2026-03-17-080000']) {
-      const runDir = join(dir, 'departmens', 'my-departmen', 'output', ts);
+      const runDir = join(dir, 'departments', 'my-department', 'output', ts);
       await mkdir(runDir, { recursive: true });
       await writeFile(join(runDir, 'state.json'), JSON.stringify({
-        departmen: 'my-departmen', status: 'completed', step: { current: 1, total: 1 },
+        department: 'my-department', status: 'completed', step: { current: 1, total: 1 },
         startedAt: `2026-03-17T${ts.slice(11, 13)}:00:00Z`,
         completedAt: `2026-03-17T${ts.slice(11, 13)}:01:00Z`,
       }), 'utf-8');
@@ -113,7 +113,7 @@ test('listRuns limits to 20 results', async () => {
   try {
     for (let i = 0; i < 25; i++) {
       const ts = `2026-03-${String(i + 1).padStart(2, '0')}-120000`;
-      const runDir = join(dir, 'departmens', 'my-departmen', 'output', ts);
+      const runDir = join(dir, 'departments', 'my-department', 'output', ts);
       await mkdir(runDir, { recursive: true });
     }
 
@@ -135,10 +135,10 @@ test('formatDuration formats milliseconds', () => {
 test('listRuns calculates duration from timestamps', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'osq-runs-'));
   try {
-    const runDir = join(dir, 'departmens', 'my-departmen', 'output', '2026-03-17-120000');
+    const runDir = join(dir, 'departments', 'my-department', 'output', '2026-03-17-120000');
     await mkdir(runDir, { recursive: true });
     await writeFile(join(runDir, 'state.json'), JSON.stringify({
-      departmen: 'my-departmen', status: 'completed',
+      department: 'my-department', status: 'completed',
       step: { current: 3, total: 3 },
       startedAt: '2026-03-17T12:00:00Z',
       completedAt: '2026-03-17T12:05:30Z',
@@ -154,7 +154,7 @@ test('listRuns calculates duration from timestamps', async () => {
 test('listRuns ignores non-directory entries in output', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'osq-runs-'));
   try {
-    const outputDir = join(dir, 'departmens', 'my-departmen', 'output');
+    const outputDir = join(dir, 'departments', 'my-department', 'output');
     await mkdir(outputDir, { recursive: true });
     await writeFile(join(outputDir, 'random-file.txt'), 'not a run', 'utf-8');
 

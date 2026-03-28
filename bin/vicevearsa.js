@@ -6,6 +6,7 @@ import { update } from '../src/update.js';
 import { skillsCli } from '../src/skills-cli.js';
 import { agentsCli } from '../src/agents-cli.js';
 import { listRuns, printRuns } from '../src/runs.js';
+import { exportDepartment } from '../src/export.js';
 
 const { positionals } = parseArgs({
   allowPositionals: true,
@@ -47,9 +48,14 @@ if (command === 'init') {
   const result = await agentsCli(subcommand, args, process.cwd());
   if (!result.success) process.exitCode = 1;
 } else if (command === 'runs') {
-  const departmenName = positionals[1] || null;
-  const runs = await listRuns(departmenName, process.cwd());
+  const departmentName = positionals[1] || null;
+  const runs = await listRuns(departmentName, process.cwd());
   printRuns(runs);
+} else if (command === 'bundle' || command === 'export') {
+  // npx vicevearsa bundle <department> [--output <path>] [--zip]
+  const args = positionals.slice(1);
+  const result = await exportDepartment(args, process.cwd());
+  if (!result.success) process.exitCode = 1;
 } else {
   console.log(`
   vicevearsa — Multi-agent orchestration for Claude Code
@@ -65,7 +71,9 @@ if (command === 'init') {
     npx vicevearsa agents install <name>   Install a predefined agent
     npx vicevearsa agents remove <name>    Remove an agent
     npx vicevearsa agents update           Update all agents
-    npx vicevearsa runs [departmen-name]     View execution history
+    npx vicevearsa runs [department-name]  View execution history
+    npx vicevearsa bundle <department>     Bundle department for sharing
+    npx vicevearsa export <department>     Export department (alias for bundle)
 
   Learn more: https://github.com/netoribeiro/vicevearsa
   `);

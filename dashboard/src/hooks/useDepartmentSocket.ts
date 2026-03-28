@@ -1,20 +1,21 @@
-import { useEffect, useRef } from "react";
-import { useDepartmenStore } from "@/store/useDepartmenStore";
-import type { WsMessage } from "@/types/state";
+import { useEffect, useRef, useCallback } from "react";
+import { useDepartmentStore } from "@/store/useDepartmentStore";
+import type { WsMessage, ApprovalResponseMessage } from "@/types/state";
 
 const RECONNECT_BASE_MS = 1000;
 const RECONNECT_MAX_MS = 30000;
 const WS_FAIL_THRESHOLD = 3;
 const POLL_INTERVAL_MS = 3000;
 
-export function useDepartmenSocket() {
+export function useDepartmentSocket() {
   const wsRef = useRef<WebSocket | null>(null);
   const pollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const setConnected = useDepartmenStore((s) => s.setConnected);
-  const setSnapshot = useDepartmenStore((s) => s.setSnapshot);
-  const updateDepartmenState = useDepartmenStore((s) => s.updateDepartmenState);
-  const setDepartmenInactive = useDepartmenStore((s) => s.setDepartmenInactive);
+  const setConnected = useDepartmentStore((s) => s.setConnected);
+  const setSnapshot = useDepartmentStore((s) => s.setSnapshot);
+  const updateDepartmentState = useDepartmentStore((s) => s.updateDepartmentState);
+  const setDepartmentInactive = useDepartmentStore((s) => s.setDepartmentInactive);
+  const updateAgentApproval = useDepartmentStore((s) => s.updateAgentApproval);
 
   useEffect(() => {
     let disposed = false;
@@ -26,13 +27,21 @@ export function useDepartmenSocket() {
       if (disposed) return;
       switch (msg.type) {
         case "SNAPSHOT":
-          setSnapshot(msg.departmens, msg.activeStates);
+          setSnapshot(msg.departments, msg.activeStates);
           break;
-        case "DEPARTMEN_UPDATE":
-          updateDepartmenState(msg.departmen, msg.state);
+        case "DEPARTMENT_UPDATE":
+          updateDepartmentState(msg.department, msg.state);
           break;
-        case "DEPARTMEN_INACTIVE":
-          setDepartmenInactive(msg.departmen);
+        case "DEPARTMENT_INACTIVE":
+          setDepartmentInactive(msg.department);
+          break;
+        case "APPROVAL_REQUEST":
+          // Update agent with approval request
+          updateAgentApproval(msg.department, msg.agentId, msg.approval);
+          break;
+        case "APPROVAL_RESPONSE_ACK":
+          // Acknowledge approval response was received by backend
+          updateAgentApproval(msg.department, msg.agentId, null);
           break;
       }
     }
@@ -78,7 +87,7 @@ export function useDepartmenSocket() {
 
       const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
       const ws = new WebSocket(
-        `${protocol}//${window.location.host}/__departmens_ws`,
+        `${protocol}//${window.location.host}/__departments_ws`,
       );
       wsRef.current = ws;
 
@@ -131,5 +140,17 @@ export function useDepartmenSocket() {
       wsRef.current?.close();
       wsRef.current = null;
     };
-  }, [setConnected, setSnapshot, updateDepartmenState, setDepartmenInactive]);
+  }, [setConnected, setSnapshot, updateDepartmentState, setDepartmentInactive, updateAgentApproval]);
+
+  // Function for components to send approval responses back to server
+  const sendApprovalResponse = useCallback(
+    (response: ApprovalResponseMessage) => {
+      if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+        wsRef.current.send(JSON.stringify(response));
+      }
+    },
+    []
+  );
+
+  return { sendApprovalResponse };
 }

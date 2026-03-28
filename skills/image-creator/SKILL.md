@@ -34,9 +34,9 @@ Use the Visual Renderer when you need to generate production-ready images from H
 
 1. **Generate HTML** -- Write a complete, self-contained HTML file with inline CSS. The HTML IS the design -- all styling, layout, fonts, colors, and content must be embedded.
 
-2. **Save HTML** -- Write the HTML file to the departmen's output folder (e.g., `output/slides/slide-01.html`)
+2. **Save HTML** -- Write the HTML file to the department's output folder (e.g., `output/slides/slide-01.html`)
 
-3. **Start HTTP server** -- Before rendering, start a local HTTP server in the departmen's output folder:
+3. **Start HTTP server** -- Before rendering, start a local HTTP server in the department's output folder:
    ```bash
    python -m http.server 8765 --directory "OUTPUT_DIR" &
    for i in $(seq 1 30); do curl -s http://localhost:8765 > /dev/null 2>&1 && break || sleep 0.1; done
@@ -65,7 +65,7 @@ Use these standard dimensions:
 - Twitter/X Post: 1200 x 675
 - LinkedIn Post: 1200 x 627
 - YouTube Thumbnail: 1280 x 720
-- Custom: as specified by the departmen
+- Custom: as specified by the department
 
 ### HTML Template Guidelines
 

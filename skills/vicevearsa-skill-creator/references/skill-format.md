@@ -11,7 +11,7 @@ Every ViceVearsa skill consists of a `SKILL.md` file with YAML frontmatter and a
 | `name` | Yes | Skill identifier (lowercase, hyphenated) |
 | `description` | Yes | What the skill does and when to use it |
 | `type` | Yes | `mcp`, `script`, `hybrid`, or `prompt` |
-| `version` | Yes | Semver version string (e.g., `1.0.0`) |
+| `version` | Yes | Semver version string (e.g., `1.0.1`) |
 | `categories` | No | Classification tags array (e.g., `["social-media", "content"]`) |
 | `env` | No | Required environment variable names array |
 
@@ -91,7 +91,7 @@ mcp:
 
 ## When to use
 
-Use this skill when the user or departmen pipeline needs to create visual content — social media posts, presentations, flyers, or any graphic design task that benefits from Canva's template library.
+Use this skill when the user or department pipeline needs to create visual content — social media posts, presentations, flyers, or any graphic design task that benefits from Canva's template library.
 
 ## Instructions
 
@@ -155,7 +155,7 @@ Use this skill when the pipeline needs to analyze tabular data from CSV files �
 ```yaml
 ---
 name: professional-tone
-description: Write content in a professional corporate tone. Use when departmen agents need to produce business communications, reports, or client-facing materials that require formal, polished language.
+description: Write content in a professional corporate tone. Use when department agents need to produce business communications, reports, or client-facing materials that require formal, polished language.
 type: prompt
 version: 1.0.0
 categories:
@@ -198,7 +198,7 @@ When writing in professional tone:
 ```yaml
 ---
 name: social-publisher
-description: Draft social media content and publish via API. Use when departmens need to create and post content to Instagram, Twitter/X, or LinkedIn with approval workflows.
+description: Draft social media content and publish via API. Use when departments need to create and post content to Instagram, Twitter/X, or LinkedIn with approval workflows.
 type: hybrid
 version: 1.0.0
 categories:
@@ -227,7 +227,7 @@ Use this skill when the pipeline needs to both create and publish social media c
 
 ## Instructions
 
-1. Draft the content using departmen agent context (topic, tone, audience)
+1. Draft the content using department agent context (topic, tone, audience)
 2. Run the formatting script to prepare platform-specific versions
 3. Present drafts for user approval at the checkpoint
 4. After approval, use the MCP server to publish to the target platforms
