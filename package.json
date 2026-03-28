@@ -1,7 +1,7 @@
 {
   "name": "vicevearsa",
-  "version": "0.1.12",
-  "description": "Multi-agent orchestration framework — create AI departmens that work together",
+  "version": "1.1.0",
+  "description": "Multi-agent orchestration framework — create AI departments that work together",
   "type": "module",
   "bin": {
     "vicevearsa": "bin/vicevearsa.js"
@@ -16,7 +16,7 @@
     "ai-agents",
     "multi-agent",
     "orchestration",
-    "departmens"
+    "departments"
   ],
   "author": "Neto Ribeiro (https://github.com/netoribeiro)",
   "homepage": "https://github.com/netoribeiro/vicevearsa#readme",
