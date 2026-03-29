@@ -13,7 +13,6 @@ interface ApprovalMemoProps {
 export function ApprovalMemo({
   agent,
   approval,
-  department,
   onApprove,
   onRevise,
   onClose,

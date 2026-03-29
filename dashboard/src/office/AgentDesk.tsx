@@ -194,7 +194,7 @@ export function AgentDesk({ agent, agentIndex, onDeskClick }: AgentDeskProps) {
       y={y}
       interactive={agent.approval?.needed}
       cursor={agent.approval?.needed ? "pointer" : "default"}
-      pointerdown={handleClick}
+      onPointerDown={handleClick}
     >
       {/* Layer 1: chair + monitor (behind character) */}
       <pixiGraphics draw={drawStationBack} />

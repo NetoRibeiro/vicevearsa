@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { Approval, PendingApproval, DepartmentState } from "@/types/state";
+import type { DepartmentState } from "@/types/state";
 
 export interface ApprovalMetrics {
   totalRequests: number;

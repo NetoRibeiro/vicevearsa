@@ -20,11 +20,7 @@ const MIN_STAGE_H = 320;
 export function OfficeScene() {
   const state = useDepartmentStore((s) =>
     s.selectedDepartment ? s.activeStates.get(s.selectedDepartment) : undefined
-  const state = useDepartmentStore((s) =>
-    s.selectedDepartment ? s.activeStates.get(s.selectedDepartment) : undefined
   );
-  const departmentInfo = useDepartmentStore((s) =>
-    s.selectedDepartment ? s.departments.get(s.selectedDepartment) : undefined
   const departmentInfo = useDepartmentStore((s) =>
     s.selectedDepartment ? s.departments.get(s.selectedDepartment) : undefined
   );
@@ -159,18 +155,13 @@ export function OfficeScene() {
         }}
       >
         {departmentInfo ? (
-        {departmentInfo ? (
           <>
-            <span style={{ fontSize: 40 }}>{departmentInfo.icon}</span>
-            <span style={{ fontSize: 16 }}>{departmentInfo.name}</span>
-            <span style={{ fontSize: 12 }}>{departmentInfo.description}</span>
             <span style={{ fontSize: 40 }}>{departmentInfo.icon}</span>
             <span style={{ fontSize: 16 }}>{departmentInfo.name}</span>
             <span style={{ fontSize: 12 }}>{departmentInfo.description}</span>
             <span style={{ fontSize: 11, marginTop: 8 }}>Not running</span>
           </>
         ) : (
-          <span>Select a department to monitor</span>
           <span>Select a department to monitor</span>
         )}
       </div>

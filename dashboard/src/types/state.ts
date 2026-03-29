@@ -29,7 +29,7 @@ export interface Agent {
   status: AgentStatus;
   deliverTo: string | null;
   desk: AgentDesk;
-  approval?: Approval; // New: approval request if waiting
+  approval?: Approval | null; // New: approval request if waiting
 }
 
 export interface Handoff {
@@ -39,7 +39,6 @@ export interface Handoff {
   completedAt: string;
 }
 
-export type DepartmentStatus =
 export type DepartmentStatus =
   | "idle"
   | "running"
@@ -72,8 +71,6 @@ export interface DepartmentState {
   updatedAt: string;
 }
 
-// Department metadata from department.yaml
-export interface DepartmentInfo {
 // Department metadata from department.yaml
 export interface DepartmentInfo {
   code: string;

@@ -68,60 +68,71 @@ agent:
     create-department: |
       ## Create Department Workflow
 
-      ### Phase 1: Discovery (3-4 questions, one at a time)
+      ### Phase 1: Discovery (3-5 questions, one at a time)
 
-      Ask these questions using numbered lists. Present one question at a time and wait for the user's answer. When options are available, present them as a numbered list and tell the user to reply with a number:
+      **CRITICAL**: Present each discovery question ONE AT A TIME. After asking each question, wait for the user's answer BEFORE proceeding to the next question. When a question has multiple choice options, reset numbering to 1 for those options. Do NOT concatenate all questions into one long list.
 
-      1. **Purpose**: "What should this department do? Describe the end result you want."
-         (Open-ended — this is the user's initial request)
+      **Question 1: Purpose**
+      Ask (open-ended, no options):
+      "What should this department do? Describe the end result you want."
+      (This is the user's initial request)
+      → Wait for answer before continuing to Question 2
 
-      2. **Audience/Context**: Based on the request, ask about target audience,
-         platform, or context. Use multiple choice when possible.
-         (Example: "Who is this content for?")
-         1. Current customers
-         2. Potential leads
-         3. General audience
-         4. Other
+      **Question 2: Audience/Context**
+      Based on the request, ask about target audience, platform, or context.
+      Present as numbered options (RESET to 1 for this question):
+      "Who is this content for?"
+      1. Current customers
+      2. Potential leads
+      3. General audience
+      4. Other
+      → Wait for answer before continuing to Question 3
 
-      3. **References** (optional): "Do you have any examples or references
-         you'd like the department to follow?" (Open-ended, can skip)
+      **Question 3: References** (optional)
+      Ask (open-ended, no options):
+      "Do you have any examples or references you'd like the department to follow?"
+      (User can say "no" or "skip" to continue without references)
+      → Wait for answer before continuing to Question 4
 
-      4. **Domain Identification**: Based on the user's answers, identify 2-4 knowledge
-         domains that the department will need expertise in.
+      **Question 4: Domain Identification**
+      Based on the user's answers, identify 2-4 knowledge domains that the department will need expertise in.
 
-         Examples:
-         - Content creation department → ["copywriting for {platform}", "{platform} engagement psychology", "viral content frameworks", "content quality evaluation"]
-         - Data analysis department → ["data visualization best practices", "{domain} KPIs and benchmarks", "statistical analysis frameworks"]
-         - Customer service department → ["customer communication best practices", "complaint resolution frameworks", "tone and empathy in support"]
+      Examples:
+      - Content creation department → ["copywriting for {platform}", "{platform} engagement psychology", "viral content frameworks", "content quality evaluation"]
+      - Data analysis department → ["data visualization best practices", "{domain} KPIs and benchmarks", "statistical analysis frameworks"]
+      - Customer service department → ["customer communication best practices", "complaint resolution frameworks", "tone and empathy in support"]
 
-         Present the identified domains to the user:
-         "Based on your needs, I'll research these knowledge areas to build the best department:
-         1. {domain 1}
-         2. {domain 2}
-         3. {domain 3}
+      Present the identified domains as numbered list (RESET to 1 for this question):
+      "Based on your needs, I'll research these knowledge areas to build the best department:
+      1. {domain 1}
+      2. {domain 2}
+      3. {domain 3}
 
-         This research takes 1-2 minutes. Want me to proceed?"
+      This research takes 1-2 minutes. Want me to proceed?"
+      → Wait for answer (yes/no) before continuing to Question 5
 
-      6. **Performance Mode**: "What quality level do you want for this department?"
-         Present as a numbered list and tell the user to reply with a number:
-         - High Performance (Recommended) — Full pipeline with deep analysis, multiple platform-specific formats, dedicated optimization tasks, and a comprehensive review.
-         - Economic — Streamlined pipeline with basic analysis, primary format only, and light review.
-           **Reduced token cost** — fewer optimization and review steps.
-           Faster execution, still good quality.
+      **Question 5: Performance Mode**
+      Ask about desired performance level.
+      Present as numbered options (RESET to 1 for this question):
+      "What quality level do you want for this department?"
+      1. High Performance (Recommended) — Full pipeline with deep analysis, multiple platform-specific formats, dedicated optimization tasks, and comprehensive review
+      2. Economic — Streamlined pipeline with basic analysis, primary format only, and light review (reduced token cost)
 
-         Token cost implications (explain to user when presenting options):
-         - High Performance: higher token consumption due to multiple optimization passes,
-           dedicated review tasks with separate scoring and feedback, and A/B variant generation
-         - Economic: reduced token consumption with single-pass creation and lightweight review
+      Token cost implications:
+      - High Performance: higher token consumption due to multiple optimization passes, separate scoring and feedback, A/B variant generation
+      - Economic: reduced token consumption with single-pass creation and lightweight review
 
-         This choice affects how the Architect designs the department:
-         - High Performance: 3-5 tasks per agent, platform-specific creators, optimization tasks, full review with separate scoring and feedback
-         - Economic: 1-2 tasks per agent, single creator (or generic writer), combined optimization in create task, lightweight single-pass review
+      This choice affects department design:
+      - High Performance: 3-5 tasks per agent, platform-specific creators, optimization tasks, full review
+      - Economic: 1-2 tasks per agent, single creator, combined optimization, lightweight review
 
-         Save the user's choice as `performance_mode`. Use it in Phase 4 to determine department design depth.
+      Save the user's choice as `performance_mode`. Use it in Phase 4 to determine design depth.
+      → Wait for answer before continuing to Question 6
 
-      7. **Target Formats** (for content departments only): If this is a content creation department,
-         ask about target formats.
+      **Question 6: Target Formats** (for content departments only)
+      Only ask this if the department is for content creation.
+      Present as numbered list (RESET to 1 for this question):
+      "Which formats or platforms will this department build content for?"
 
          "Which formats or platforms will this department build content for?"
 
