@@ -71,13 +71,9 @@ if (command === 'init') {
     npx vicevearsa agents install <name>   Install a predefined agent
     npx vicevearsa agents remove <name>    Remove an agent
     npx vicevearsa agents update           Update all agents
-<<<<<<< HEAD
     npx vicevearsa runs [department-name]  View execution history
     npx vicevearsa bundle <department>     Bundle department for sharing
     npx vicevearsa export <department>     Export department (alias for bundle)
-=======
-    npx vicevearsa runs [department-name]     View execution history
->>>>>>> 45965c418044b57e3da07b9e8aced5e00b94ae50
 
   Learn more: https://github.com/netoribeiro/vicevearsa
   `);

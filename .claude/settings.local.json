@@ -16,7 +16,13 @@
       "Bash(git commit:*)",
       "Bash(git reset:*)",
       "Bash(npm install:*)",
-      "Bash(grep -E \"\\(prompt|md\\)$\")"
+      "Bash(grep -E \"\\(prompt|md\\)$\")",
+      "Bash(node -e \":*)",
+      "Bash(curl -s \"http://localhost:5175/api/snapshot\")",
+      "Bash(\"C:/VearsaCore/vicevearsa/departments/content-review/input/topic.md\":*)",
+      "Bash(timeout 30 npx vicevearsa run content-review)",
+      "Bash(npx vicevearsa:*)",
+      "Bash(pkill -f \"npm run dev\")"
     ]
   },
   "outputStyle": "default"

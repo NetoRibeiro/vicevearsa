@@ -43,23 +43,74 @@ npx vicevearsa update
 | Cursor | Available |
 | VS Code + Copilot | Available |
 
-## Virtual Office
+## Dashboard & Approval Workflow
 
-The Virtual Office is a 2D visual interface that shows your agents working in real time.
+The Dashboard is a real-time virtual office where you watch agents work and approve/revise their outputs.
 
-**Step 1 — Generate the dashboard** (in your IDE):
+### Starting the Dashboard
 
-```
-/vicevearsa dashboard
-```
-
-**Step 2 — Serve it locally** (in terminal):
+From your project root:
 
 ```bash
-npx serve departments/<department-name>/dashboard
+cd dashboard
+npm run dev
 ```
 
-**Step 3 —** Open `http://localhost:3000` in your browser.
+The dev server will start on `http://localhost:5173` (or next available port).
+
+### Dashboard Features
+
+- **Real-time Agent Status**: See which agent is active, idle, or waiting for approval
+- **Approval Requests**: When an agent needs your approval, an interactive memo popup appears
+- **Approve or Revise**: Click "✓ Approve" to continue, or "→ Revise" with instructions
+- **Visual Feedback**: Blue monitor = active agent, gray = idle, gold = waiting for approval
+
+### Approval Workflow Example
+
+When a `content-review` department runs:
+
+1. **Researcher agent** gathers information and needs approval
+   - Click the researcher's desk (gold status dot)
+   - Review the memo popup with research findings
+   - Approve or request revisions
+
+2. **Writer agent** creates content based on research
+   - Approve writing style and structure
+   - Or revise with specific feedback
+
+3. **Review checkpoint** shows final content
+   - Approve for publishing
+   - Or request another round of revisions
+
+### Dashboard Troubleshooting
+
+If agents aren't showing or approvals aren't appearing:
+
+1. **Check the browser console** (F12 → Console)
+   - Should NOT see "WebSocket is closed" errors
+   - Should see clean connection
+
+2. **Verify the departments directory exists**
+   - `departments/` folder at project root
+   - Each department has `department.yaml` with agent definitions
+
+3. **Confirm the dashboard is running**
+   ```bash
+   cd dashboard && npm run dev
+   ```
+   - Should log: `[department-watcher] departments dir: ...`
+
+## Architecture Overview
+
+ViceVearsa consists of:
+
+- **Core Framework** (`src/`) — Agent orchestration, pipeline execution, approval handling
+- **CLI** (`bin/vicevearsa.js`) — Command-line interface
+- **Dashboard** (`dashboard/`) — Real-time visual interface for monitoring and approvals
+- **Templates** (`templates/`) — Boilerplate for new projects
+- **Agents** (`agents/`) — Pre-built agent definitions
+
+For developers working on the framework, see [CLAUDE.md](./CLAUDE.md) for detailed architecture and testing guidelines.
 
 ## Creating your Department
 
@@ -101,6 +152,21 @@ The department runs automatically, pausing only at checkpoints where your decisi
 | `/vicevearsa skills` | Browse installed skills |
 | `/vicevearsa install <name>` | Install a skill from catalog |
 | `/vicevearsa uninstall <name>` | Remove an installed skill |
+
+## Recent Fixes
+
+### Dashboard Agent Display (v0.x.x)
+
+**Issue**: Agents defined in `department.yaml` weren't showing in the Dashboard virtual office.
+
+**Cause**: YAML parsing bug in the department watcher plugin — it was looking for agents in the wrong location.
+
+**Fix**: Updated the plugin to correctly parse department metadata and extract agent names from both object and string formats.
+
+**How to verify**:
+- Start the dashboard: `cd dashboard && npm run dev`
+- Visit `http://localhost:PORT/api/snapshot` in your browser
+- You should see all agents listed with their names
 
 ## License
 

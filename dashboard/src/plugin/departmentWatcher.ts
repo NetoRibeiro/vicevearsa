@@ -38,14 +38,25 @@ async function discoverDepartments(departmentsDir: string): Promise<DepartmentIn
     try {
       const raw = await fsp.readFile(yamlPath, "utf-8");
       const parsed = parseYaml(raw);
-      const s = parsed?.department;
-      if (s) {
+      const s = parsed;
+      if (s && typeof s === "object") {
+        // Extract agents from array of objects: [{researcher: "..."}, {writer: "..."}]
+        // or array of strings: ["researcher", "writer"]
+        let agents: string[] = [];
+        if (Array.isArray(s.agents)) {
+          agents = (s.agents as unknown[]).flatMap((a) => {
+            if (typeof a === "string") return [a];
+            if (a && typeof a === "object") return Object.keys(a as Record<string, unknown>);
+            return [];
+          });
+        }
+
         departments.push({
           code: typeof s.code === "string" ? s.code : entry.name,
           name: typeof s.name === "string" ? s.name : entry.name,
           description: typeof s.description === "string" ? s.description : "",
           icon: typeof s.icon === "string" ? s.icon : "\u{1F4CB}",
-          agents: Array.isArray(s.agents) ? (s.agents as unknown[]).filter((a): a is string => typeof a === "string") : [],
+          agents,
         });
         continue;
       }
