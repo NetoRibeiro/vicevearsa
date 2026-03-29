@@ -2,6 +2,7 @@ node_modules/
 .env
 *.log
 departments/*/output/
+departments/*/output/
 _vicevearsa/_memory/company.md
 _vicevearsa/_memory/preferences.md
 _vicevearsa/_browser_profile/

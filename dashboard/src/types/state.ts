@@ -40,6 +40,7 @@ export interface Handoff {
 }
 
 export type DepartmentStatus =
+export type DepartmentStatus =
   | "idle"
   | "running"
   | "completed"
@@ -71,6 +72,8 @@ export interface DepartmentState {
   updatedAt: string;
 }
 
+// Department metadata from department.yaml
+export interface DepartmentInfo {
 // Department metadata from department.yaml
 export interface DepartmentInfo {
   code: string;
