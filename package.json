@@ -1,6 +1,6 @@
 {
   "name": "vicevearsa",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Multi-agent orchestration framework \u2014 create AI departments that work together",
   "type": "module",
   "bin": {
