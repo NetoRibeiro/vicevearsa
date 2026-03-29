@@ -1,7 +1,8 @@
 import { cp, mkdir, readdir, readFile, writeFile, stat } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { execSync } from 'node:child_process';
+import { execSync, spawn } from 'node:child_process';
+import { userInfo, platform } from 'node:os';
 import { createPrompt } from './prompt.js';
 import { loadLocale, t } from './i18n.js';
 import { listAvailable, installSkill } from './skills.js';
@@ -43,7 +44,11 @@ export async function init(targetDir, options = {}) {
   let ides = options._ides ?? ['claude-code'];
   let userName = '';
 
-  if (!options._skipPrompts) {
+  if (options._quick) {
+    // Quick mode: no prompts, smart defaults
+    userName = userInfo().username;
+    await loadLocale(language);
+  } else if (!options._skipPrompts) {
     const prompt = createPrompt();
 
     try {
@@ -70,7 +75,7 @@ export async function init(targetDir, options = {}) {
   await copyCommonTemplates(targetDir);
   await copyIdeTemplates(ides, targetDir);
   await installAllSkills(targetDir);
-  if (!options._skipPrompts) {
+  if (!options._skipPrompts && !options._skipDeps) {
     await installDependencies(targetDir);
   }
   await writeProjectReadme(targetDir);
@@ -109,6 +114,12 @@ export async function init(targetDir, options = {}) {
       console.log(`  ${t('step2VsCodeCopilot')}`);
       console.log(`  ${t('step3VsCodeCopilot')}\n`);
     }
+  }
+
+  // Quick mode: auto-start dashboard and open browser
+  if (options._quick && !options._skipDashboardStart) {
+    startDashboard(targetDir);
+    setTimeout(() => openBrowser('http://localhost:5173'), 3000);
   }
 }
 
@@ -239,6 +250,29 @@ async function mergeVsCodeSettings(targetDir) {
   }
 
   await writeFile(settingsPath, JSON.stringify(parsed, null, 2), 'utf-8');
+}
+
+function startDashboard(targetDir) {
+  const dashboardDir = join(targetDir, 'dashboard');
+  const child = spawn('npm', ['run', 'dev'], {
+    cwd: dashboardDir,
+    stdio: 'ignore',
+    detached: true,
+    shell: true,
+  });
+  child.unref();
+  console.log('\n  🖥️  Dashboard starting at http://localhost:5173\n');
+}
+
+function openBrowser(url) {
+  const os = platform();
+  try {
+    if (os === 'darwin') execSync(`open ${url}`);
+    else if (os === 'win32') execSync(`start ${url}`, { shell: true });
+    else execSync(`xdg-open ${url}`);
+  } catch {
+    // Browser open failed — not critical
+  }
 }
 
 export async function getTemplateEntries(dir) {

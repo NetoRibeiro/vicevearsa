@@ -8,6 +8,7 @@ import { watch as chokidarWatch } from "chokidar";
 import path from "node:path";
 import { parse as parseYaml } from "yaml";
 import type { DepartmentInfo, DepartmentState, WsMessage } from "../types/state";
+import { createApiMiddleware } from "./apiRoutes";
 
 function resolveDepartmentsDir(): string {
   const candidates = [
@@ -158,7 +159,7 @@ export function departmentWatcherPlugin(): Plugin {
         // Let Vite handle all other upgrade requests (HMR)
       });
 
-      // Send snapshot on new connection
+      // Send snapshot on new connection + handle incoming messages
       wss.on("connection", async (ws) => {
         try {
           const snap = await buildSnapshot(departmentsDir);
@@ -166,6 +167,34 @@ export function departmentWatcherPlugin(): Plugin {
         } catch {
           // Connection may have closed before snapshot was ready
         }
+
+        ws.on("message", async (data) => {
+          try {
+            const msg = JSON.parse(data.toString());
+            if (msg.type === "APPROVAL_RESPONSE") {
+              // Write to approval history
+              const historyPath = path.join(departmentsDir, msg.department, "approval-history.json");
+              let history: unknown[] = [];
+              try {
+                const raw = await fsp.readFile(historyPath, "utf-8");
+                history = JSON.parse(raw);
+              } catch {
+                // No history file yet
+              }
+              history.push({
+                step: msg.step,
+                agentId: msg.agentId,
+                action: msg.action,
+                instruction: msg.instruction,
+                requestedAt: new Date().toISOString(),
+                respondedAt: msg.respondedAt,
+              });
+              await fsp.writeFile(historyPath, JSON.stringify(history, null, 2), "utf-8");
+            }
+          } catch {
+            // Ignore malformed messages
+          }
+        });
       });
 
       // Ensure departments directory exists
@@ -186,6 +215,10 @@ export function departmentWatcherPlugin(): Plugin {
           res.end("Internal Server Error");
         }
       });
+
+      // REST API routes for Dashboard CRUD operations
+      const viceversaDir = path.resolve(departmentsDir, "..", "_vicevearsa");
+      server.middlewares.use(createApiMiddleware({ departmentsDir, viceversaDir }));
 
       // File watcher using chokidar — reliable cross-platform, handles partial writes
       const watcher = chokidarWatch(departmentsDir, {

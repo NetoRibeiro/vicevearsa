@@ -509,3 +509,21 @@ test('init with cursor IDE creates .cursorignore with browser profile exclusion'
     await rm(tempDir, { recursive: true, force: true });
   }
 });
+
+test('init with _quick option skips prompts and uses OS username', async () => {
+  const tempDir = await mkdtemp(join(tmpdir(), 'vicevearsa-test-'));
+
+  try {
+    await init(tempDir, { _quick: true, _skipDeps: true, _skipDashboardStart: true });
+
+    const prefs = await readFile(join(tempDir, '_vicevearsa', '_memory', 'preferences.md'), 'utf-8');
+    assert.ok(prefs.includes('English'), 'should default to English');
+    assert.ok(prefs.includes('claude-code'), 'should default to claude-code IDE');
+    // Username should be the OS username, not empty
+    const os = await import('node:os');
+    const userName = os.userInfo().username;
+    assert.ok(prefs.includes(userName), 'should use OS username');
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});

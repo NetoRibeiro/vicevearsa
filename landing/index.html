@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ViceVearsa — AI Department Orchestration</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <h1>ViceVearsa</h1>
+    <p class="tagline">Design AI departments that work together — right inside your IDE.</p>
+
+    <div class="install-section">
+      <h2>Install in one command</h2>
+
+      <div id="install-mac" class="install-block">
+        <p class="os-label">macOS / Linux</p>
+        <div class="code-block">
+          <code id="cmd-mac">curl -fsSL https://vicevearsa.com/install.sh | bash</code>
+          <button onclick="copyCmd('cmd-mac', this)" class="copy-btn" title="Copy">&#x1F4CB;</button>
+        </div>
+      </div>
+
+      <div id="install-win" class="install-block">
+        <p class="os-label">Windows (PowerShell)</p>
+        <div class="code-block">
+          <code id="cmd-win">irm https://vicevearsa.com/install.ps1 | iex</code>
+          <button onclick="copyCmd('cmd-win', this)" class="copy-btn" title="Copy">&#x1F4CB;</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="features">
+      <div class="feature">
+        <h3>Describe your mission</h3>
+        <p>Tell ViceVearsa what you need in plain language. An Architect agent designs the team.</p>
+      </div>
+      <div class="feature">
+        <h3>Automated pipeline</h3>
+        <p>Agents work through a structured sequence, pausing only for your approval.</p>
+      </div>
+      <div class="feature">
+        <h3>Visual Dashboard</h3>
+        <p>Watch your agents work in a pixel-art virtual office. Approve directly from the browser.</p>
+      </div>
+    </div>
+
+    <footer>
+      <a href="https://github.com/netoribeiro/vicevearsa">GitHub</a>
+      <span>&middot;</span>
+      <a href="https://www.npmjs.com/package/vicevearsa">npm</a>
+    </footer>
+  </main>
+
+  <script>
+    // Auto-detect OS and highlight relevant install block
+    const isWin = /Win/.test(navigator.userAgent);
+    if (isWin) {
+      document.getElementById('install-win').classList.add('highlight');
+    } else {
+      document.getElementById('install-mac').classList.add('highlight');
+    }
+
+    function copyCmd(id, btn) {
+      const text = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = '\u2713';
+        setTimeout(() => btn.textContent = '\u{1F4CB}', 2000);
+      });
+    }
+  </script>
+</body>
+</html>

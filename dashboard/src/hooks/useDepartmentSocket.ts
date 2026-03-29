@@ -7,6 +7,25 @@ const RECONNECT_MAX_MS = 30000;
 const WS_FAIL_THRESHOLD = 3;
 const POLL_INTERVAL_MS = 3000;
 
+function requestNotificationPermission() {
+  if ("Notification" in window && Notification.permission === "default") {
+    Notification.requestPermission();
+  }
+}
+
+function showApprovalNotification(department: string, step: string) {
+  if ("Notification" in window && Notification.permission === "granted") {
+    const n = new Notification(`ViceVearsa: ${department}`, {
+      body: `Needs your approval: ${step}`,
+      tag: `approval-${department}-${step}`,
+    });
+    n.onclick = () => {
+      window.focus();
+      n.close();
+    };
+  }
+}
+
 export function useDepartmentSocket() {
   const wsRef = useRef<WebSocket | null>(null);
   const pollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -38,6 +57,7 @@ export function useDepartmentSocket() {
         case "APPROVAL_REQUEST":
           // Update agent with approval request
           updateAgentApproval(msg.department, msg.agentId, msg.approval);
+          showApprovalNotification(msg.department, msg.approval.step);
           break;
         case "APPROVAL_RESPONSE_ACK":
           // Acknowledge approval response was received by backend
@@ -132,6 +152,7 @@ export function useDepartmentSocket() {
     }
 
     connect();
+    requestNotificationPermission();
 
     return () => {
       disposed = true;

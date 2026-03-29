@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ---
 
-# ViceVearsa — Project Instructions
+## Project Overview
 
-**ViceVearsa** is a multi-agent orchestration framework that lets users design AI departments—teams of specialized agents that work together to complete complex tasks.
+**ViceVearsa** is a multi-agent orchestration framework that lets users design AI departments — teams of specialized agents that work together to complete complex tasks. It is distributed as an npm package and operated through IDE slash commands.
 
 ## Quick Start for Users
 
@@ -15,151 +15,184 @@ Type `/vicevearsa` to open the main menu, or use any of these commands:
 - `/vicevearsa run <name>` — Run a department
 - `/vicevearsa help` — See all commands
 
-## Development Setup
-
-This project is a published npm package. To work on the framework:
+## Development Commands
 
 ```bash
-npm install           # Install dependencies
-npm test              # Run all tests
-npm run lint          # Check code quality
+npm install                              # Install dependencies
+npm test                                 # Run all tests (node --test tests/*.test.js)
+npm run lint                             # ESLint on src/ bin/ tests/
+node --test tests/agents.test.js         # Run a single test file
+node --test tests/*skills* --grep "pat"  # Run tests matching a pattern
+npm run version                          # Sync version into templates/_vicevearsa/.vicevearsa-version
 ```
 
-### Running Individual Tests
+### Dashboard (separate app in `dashboard/`)
 
 ```bash
-node --test tests/agents.test.js      # Test agent system
-node --test tests/skills.test.js      # Test skill management
-node --test tests/init.test.js        # Test initialization
-node --test tests/update.test.js      # Test update mechanism
+cd dashboard
+npm install          # First time only
+npm run dev          # Vite dev server (default port 5173)
+npm run build        # Production build
+npm run preview      # Preview production build
 ```
 
-### Testing with Pattern Matching
+## Architecture
 
-```bash
-node --test tests/*.test.js            # Run all tests
-node --test tests/*skills* --grep "pattern"  # Run tests matching a pattern
+### Two Codebases
+
+| Area | Path | Runtime | Purpose |
+|------|------|---------|---------|
+| **Core framework** | `src/`, `bin/` | Node.js (ESM) | CLI, agent management, skills, bundling |
+| **Dashboard** | `dashboard/` | React 19 + Vite 6 + Pixi.js 8 + Zustand 5 (TypeScript) | Real-time agent visualization and approval UI |
+
+These are independent — the core framework has no dependency on the dashboard. They communicate through the filesystem (`departments/*/state.json`) and WebSocket messages.
+
+### Core Framework Modules
+
+- **`bin/vicevearsa.js`** — CLI entry point; routes commands to modules
+- **`src/init.js`** — Copies `templates/` into user projects
+- **`src/agents.js`** — Agent registry, loading, composition
+- **`src/prompt.js`** — Prompt building and template formatting
+- **`src/skills.js` / `src/skills-cli.js`** — Skill install, remove, update
+- **`src/agents-cli.js`** — Agent CLI subcommands
+- **`src/runs.js`** — Execution history tracking
+- **`src/bundle.js` / `src/bundle-detector.js`** — Bundle departments for sharing; detect bundled vs project mode
+- **`src/export.js`** — CLI wrapper for bundling
+- **`src/update.js`** — Framework self-update
+- **`src/logger.js`** — CLI output formatting
+- **`src/i18n.js`** / **`src/locales/`** — Internationalization and translation files
+
+### Dashboard Architecture
+
+The dashboard is a Pixi.js pixel-art virtual office rendered in a React app. Uses `@/*` path alias for imports (mapped to `./src/*` in tsconfig and vite config).
+
+**Data flow:** Filesystem → Vite plugin → WebSocket → Zustand store → React/Pixi rendering
+
+Key files:
+- **`dashboard/src/plugin/departmentWatcher.ts`** — Vite plugin that watches `departments/` with chokidar, serves WebSocket on `/__departments_ws`, and provides HTTP fallback at `/api/snapshot`
+- **`dashboard/src/hooks/useDepartmentSocket.ts`** — Client-side WebSocket with auto-reconnect (exponential backoff 1s→30s) and HTTP polling fallback after 3 failures
+- **`dashboard/src/store/useDepartmentStore.ts`** — Zustand store holding `departments`, `activeStates`, `selectedDepartment`
+- **`dashboard/src/office/OfficeScene.tsx`** — Pixi.js canvas rendering all agent desks
+- **`dashboard/src/office/AgentDesk.tsx`** — Individual agent desk with status animations and approval flash effects
+- **`dashboard/src/components/ApprovalMemo.tsx`** — Approval popup (approve/revise with instructions)
+- **`dashboard/src/types/state.ts`** — All TypeScript interfaces for state, agents, approvals, and WebSocket messages
+
+### WebSocket Protocol
+
+Messages backend → dashboard: `SNAPSHOT`, `DEPARTMENT_UPDATE`, `DEPARTMENT_INACTIVE`, `APPROVAL_REQUEST`, `APPROVAL_RESPONSE_ACK`
+
+Messages dashboard → backend: `APPROVAL_RESPONSE` (action: `"approve"` | `"revise"`, optional `instruction`)
+
+### Department Watcher Plugin Details
+
+- Uses `noServer: true` on WebSocketServer to avoid conflicting with Vite's HMR WebSocket
+- `resolveDepartmentsDir()` checks both `../departments` (run from `dashboard/`) and `./departments` (run from root)
+- chokidar config: `awaitWriteFinish` with 300ms stability threshold, `depth: 2`, ignores dotfiles/node_modules/output
+- `state.json` changes → broadcasts `DEPARTMENT_UPDATE`; `department.yaml` changes → rebuilds and broadcasts full `SNAPSHOT`
+
+## User-Facing Directory Structure
+
+When initialized in a project via `npx vicevearsa init`:
+
+```
+_vicevearsa/                  Core files (do not edit manually)
+  _memory/company.md          Company context loaded for every run
+  _browser_profile/           Persistent Playwright sessions (gitignored)
+  .vicevearsa-version         Installed framework version
+skills/                       Installed skills
+departments/
+  {name}/
+    department.yaml           Department metadata
+    state.json                Live execution state (read by dashboard)
+    agents/                   Agent definition files (.agent.md)
+    pipeline/
+      pipeline.yaml           Step sequence
+      steps/                  Individual step files (.md with frontmatter)
+    _investigations/          Auguste-Dupin content investigations
+    _memory/                  Department-specific memory
+    input/                    Input files for pipeline
+    output/                   Generated content
 ```
 
-## Architecture Overview
+## Department YAML Format
 
-### Core Module Structure
+Root-level keys (NOT nested under a `department:` key):
 
-The ViceVearsa framework is organized into these key modules:
+```yaml
+code: content-review
+name: Content Review Studio
+description: Review and approve content with dashboard feedback
+icon: 👁️
+company: ../_vicevearsa/_memory/company.md
 
-- **`src/init.js`** — Initializes a new ViceVearsa installation in a directory; creates template structure
-- **`src/agents.js`** — Manages agent definitions and agent registry; handles agent loading and composition
-- **`src/prompt.js`** — Builds and formats prompts for agents; manages prompt templates
-- **`src/skills.js`** — Manages skill installation, removal, and updates
-- **`src/skills-cli.js`** — CLI interface for skill management (`install`, `remove`, `update`)
-- **`src/agents-cli.js`** — CLI interface for agent management
-- **`src/runs.js`** — Tracks execution history and department runs
-- **`src/update.js`** — Updates the ViceVearsa core framework
-- **`src/bundle.js`** — Bundles departments into self-contained packages for sharing
-- **`src/bundle-detector.js`** — Detects execution mode (bundled vs. project) and resolves paths accordingly
-- **`src/export.js`** — CLI wrapper for department bundling and export operations
-- **`src/logger.js`** — Logging utilities for CLI output
-- **`src/i18n.js`** — Internationalization support
+agents:
+  - researcher: ./agents/researcher.agent.md
+  - writer: ./agents/writer.agent.md
 
-### Entry Point
+skills:
+  - web_search
+```
 
-- **`bin/vicevearsa.js`** — CLI entry point; routes commands to appropriate modules
+**Critical:** The `agents` array contains objects `[{agentName: path}, ...]`, not strings. The dashboard plugin extracts agent IDs via `Object.keys()` on each entry. Some departments use expanded format: `[{id, name, icon, custom, execution, skills}, ...]`.
 
-### Directory Structure (User-Facing)
+## Pipeline Step Format
 
-When initialized in a project:
+Step files in `pipeline/steps/` use YAML frontmatter:
 
-- `_vicevearsa/` — ViceVearsa core files (do not modify manually)
-- `_vicevearsa/_memory/` — Persistent memory (company context, preferences)
-- `skills/` — Installed skills (integrations, scripts, prompts)
-- `departments/` — User-created departments
-- `departments/{name}/_investigations/` — Auguste-Dupin content investigations (profile analyses)
-- `departments/{name}/output/` — Generated content and files
-- `_vicevearsa/_browser_profile/` — Persistent browser sessions (login cookies, localStorage)
+```yaml
+---
+step_id: research
+agent: researcher
+execution: subagent          # or "inline"
+model_tier: powerful
+approval_needed: true
+approval_question: Are the research findings comprehensive?
+inputFile: departments/content-review/input/topic.md
+outputFile: departments/content-review/output/research.md
+---
+```
 
-### Templates (Distribution)
+Steps with `type: checkpoint` are manual user-approval gates. Steps with `approval_needed: true` trigger the dashboard's approval popup.
 
-- **`templates/`** — Template files distributed with the npm package; initialized into user projects via `src/init.js`
-- **`templates/_vicevearsa/`** — Core template structure
-- **`agents/`** — Predefined agents available for installation
+## Execution Flow
 
-## How It Works (User Perspective)
-
-1. The `/vicevearsa` skill is the entry point for all interactions
-2. The **Architect** agent creates and modifies departments
-3. During department creation, the **Auguste-Dupin** investigator can analyze reference profiles (Instagram, YouTube, Twitter/X, LinkedIn) to extract real content patterns
-4. The **Pipeline Runner** executes departments automatically
+1. `/vicevearsa` skill is the entry point for all interactions
+2. **Architect** agent designs departments from user descriptions
+3. **Auguste-Dupin** investigator can analyze reference profiles (Instagram, YouTube, Twitter/X, LinkedIn)
+4. **Pipeline Runner** executes departments, writing `state.json` as it progresses
 5. Agents communicate via persona switching (inline) or subagents (background)
-6. Checkpoints pause execution for user input/approval
+6. Checkpoints pause for user input/approval — via IDE console or dashboard popup
 
-## Bundling & Sharing Departments
+## npm Package Distribution
 
-Departments can be bundled into self-contained packages and shared with colleagues:
+- Package name: `vicevearsa` (published to npm)
+- Bin entry: `bin/vicevearsa.js` → `vicevearsa` command
+- Published files: `bin/`, `src/`, `skills/`, `templates/`
+- `templates/` contents are copied into user projects during `init`
+- `templates/ide-templates/` contains IDE-specific command templates for 6 supported IDEs (claude-code, cursor, codex, opencode, antigravity, vscode-copilot)
+- System agents (architect, runner, skills engine) live in `templates/_vicevearsa/core/`, not a top-level `agents/` directory
+- Version script syncs `package.json` version → `templates/_vicevearsa/.vicevearsa-version`
 
-```bash
-# Create a bundle
-npx vicevearsa bundle my-department
+## Testing
 
-# Recipients can run it directly
-cd my-department
-npx vicevearsa run
-```
+Node's built-in test runner. Test files mirror source modules:
 
-Bundles include:
-- Complete orchestration (all agents, pipeline, skills)
-- Company context and preferences
-- Execution memory and learnings
-- All necessary dependencies
+`agents.test.js`, `skills.test.js`, `init.test.js`, `update.test.js`, `runs.test.js`, `bundle.test.js`, `bundle-detector.test.js`, `logger.test.js`, `i18n.test.js`
 
-**See `docs/bundling.md` for comprehensive guide on bundling and sharing departments.**
-
-## Framework Distribution & Packaging
-
-ViceVearsa is distributed as an npm package (published to npm registry).
-
-- **Package name:** `vicevearsa`
-- **Bin entry:** `bin/vicevearsa.js` is registered as the `vicevearsa` command in `package.json`
-- **Files included:** `bin/`, `src/`, `agents/`, `skills/`, `templates/` (see `files` field in package.json)
-- **Distributed files:** The contents of `templates/` are copied into user projects during initialization
-- **Version tracking:** `templates/_vicevearsa/.vicevearsa-version` stores the installed version; updated via `npm run version` script
-
-When users run `npx vicevearsa init`, the `templates/` directory structure is copied into their project with `_vicevearsa/` and initial directories set up.
-
-## Testing Approach
-
-The project uses Node's built-in test runner (`node --test`). Tests are organized by module:
-
-- **agents.test.js** — Agent loading, registry, and composition
-- **skills.test.js** — Skill install/remove/update operations
-- **init.test.js** — Initialization process
-- **update.test.js** — Update mechanism and version management
-- **runs.test.js** — Execution history tracking
-- **bundle.test.js** — Bundle generation, structure, and path rewriting
-- **bundle-detector.test.js** — Bundle detection and path resolution
-- **logger.test.js** — Log output formatting
-- **i18n.test.js** — Internationalization
-
-When adding features, add corresponding tests in the `tests/` directory. All tests must pass before merging.
-
-## Rules for Users
-
-- Always use `/vicevearsa` commands to interact with the system
-- Do not manually edit files in `_vicevearsa/core/` unless you know what you're doing
-- Department YAML files can be edited manually if needed, but prefer using `/vicevearsa edit`
-- Company context in `_vicevearsa/_memory/company.md` is loaded for every department run
+Dashboard has a separate manual testing guide: `dashboard/APPROVAL_TESTING.md`
 
 ## Rules for Developers
 
 - Changes to `src/` or `bin/` must pass `npm test` and `npm run lint`
-- When modifying CLI behavior, update corresponding test files
-- Template updates in `templates/` should be tested by running `npx vicevearsa init` in a test directory
-- All new features should include tests—don't add untested code
-- Use the version script (`npm run version`) when updating the package version
+- All new features need corresponding tests in `tests/`
+- Template updates in `templates/` should be tested by running `npx vicevearsa init` in a temp directory
+- Use `npm run version` when updating the package version
+- The dashboard is TypeScript; the core framework is plain ESM JavaScript
+- ESLint uses v10 flat config (`eslint.config.js`, not `.eslintrc`), targeting ES2024+
 
 ## Browser Sessions
 
-ViceVearsa uses a persistent Playwright browser profile to keep you logged into social media platforms.
-- Sessions are stored in `_vicevearsa/_browser_profile/` (gitignored, private to you)
-- First time accessing a platform, you'll log in manually once
-- Subsequent runs will reuse your saved session
-- **Important:** The native Claude Code Playwright plugin must be disabled. ViceVearsa uses its own `@playwright/mcp` server configured in `.mcp.json`.
+ViceVearsa uses a persistent Playwright browser profile for social media access.
+- Sessions stored in `_vicevearsa/_browser_profile/` (gitignored)
+- First platform access requires manual login; subsequent runs reuse the session
+- **Important:** The native Claude Code Playwright plugin must be disabled. ViceVearsa uses its own `@playwright/mcp` server configured in `.mcp.json`, which points to `_vicevearsa/config/playwright.config.json`.

@@ -442,8 +442,8 @@ agent:
          Every agent MUST have a memorable name based on a famous literary figure following these rules:
          - **Format:** "AuthorName SpecialtyName" — both words MUST use assonance (matching internal vowel sounds)
          - **First name:** Must be the first name of a world-renowned author (e.g., Isaac, Oscar, Umberto)
-         - **Last name:** A witty, professional reference to the agent's specific role or department task that shares the dominant vowel sound of the First Name
-         - **Uniqueness:** Each agent in the department MUST represent a distinct vowel sound (A, E, I, O, U)
+         - **Last name:** A witty, professional reference to the agent's specific role or department task that MUST use assonance (matching internal vowel sounds)
+         - **Uniqueness:** Each agent in the department MUST represent world-renowned author (e.g., Isaac, Oscar, Umberto)
          - **Icon:** Use a relative path from Iconify (e.g., ph:pen-nib-bold). No emojis
 
          The name should evoke the author's legacy while clearly signaling the agent's professional function..

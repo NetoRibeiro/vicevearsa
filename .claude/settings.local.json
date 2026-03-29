@@ -22,7 +22,23 @@
       "Bash(\"C:/VearsaCore/vicevearsa/departments/content-review/input/topic.md\":*)",
       "Bash(timeout 30 npx vicevearsa run content-review)",
       "Bash(npx vicevearsa:*)",
-      "Bash(pkill -f \"npm run dev\")"
+      "Bash(pkill -f \"npm run dev\")",
+      "Bash(grep -E \"\\(package\\\\.json|\\\\.ts$|\\\\.tsx$\\)\")",
+      "Bash(find /c/VearsaCore/vicevearsa -name .mcp.json -o -name *.env*)",
+      "Bash(xargs grep:*)",
+      "Bash(grep -r agents: /c/VearsaCore/vicevearsa/departments/*/department.yaml)",
+      "Bash(find /c/VearsaCore/vicevearsa -path *departments/*/department.yaml -type f)",
+      "Bash(xargs head:*)",
+      "Bash(node --test tests/init.test.js --test-name-pattern \"quick\")",
+      "Bash(npx tsc:*)",
+      "Bash(lsof -ti:5173)",
+      "Bash(xargs kill:*)",
+      "Bash(taskkill //F //FI 'WINDOWTITLE eq npm')",
+      "Bash(netstat -ano)",
+      "Bash(taskkill //PID 24588 //F)",
+      "mcp__Claude_Preview__preview_start",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_take_screenshot"
     ]
   },
   "outputStyle": "default"

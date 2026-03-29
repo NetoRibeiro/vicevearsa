@@ -8,15 +8,18 @@ import { agentsCli } from '../src/agents-cli.js';
 import { listRuns, printRuns } from '../src/runs.js';
 import { exportDepartment } from '../src/export.js';
 
-const { positionals } = parseArgs({
+const { positionals, values } = parseArgs({
   allowPositionals: true,
   strict: false,
+  options: {
+    quick: { type: 'boolean', default: false },
+  },
 });
 
 const command = positionals[0];
 
 if (command === 'init') {
-  await init(process.cwd());
+  await init(process.cwd(), values.quick ? { _quick: true } : {});
 } else if (command === 'install') {
   // npx vicevearsa install <name>
   const result = await skillsCli('install', positionals.slice(1), process.cwd());

@@ -109,3 +109,12 @@ export interface ApprovalResponseMessage {
   instruction?: string;
   respondedAt: string;
 }
+
+export interface ApprovalHistoryEntry {
+  step: string;
+  agentId: string;
+  action: "approve" | "revise";
+  instruction?: string;
+  requestedAt: string;
+  respondedAt: string;
+}
