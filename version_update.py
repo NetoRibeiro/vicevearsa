@@ -59,9 +59,10 @@ def update_package(package_file):
 project_folder = os.getcwd()
 # Ensure package_file is defined, if not, set a default (though it should be from previous cells)
 package_file = f'{project_folder}/package.json' # Default path if not set
-package_template = f'{project_folder}/templates/_vicevearsa/.vicevearsa-version
+package_template = f'{project_folder}/templates/_vicevearsa/.vicevearsa-version'
 
 list_files = [package_file, package_template]
 
-for file_in in list_files:
-    update_package(file_in)
+if __name__ == "__main__":
+    for file_in in list_files:
+        update_package(file_in)

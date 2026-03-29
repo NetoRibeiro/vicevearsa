@@ -1,7 +1,7 @@
 {
   "name": "vicevearsa",
-  "version": "1.1.1",
-  "description": "Multi-agent orchestration framework — create AI departments that work together",
+  "version": "1.1.2",
+  "description": "Multi-agent orchestration framework \u2014 create AI departments that work together",
   "type": "module",
   "bin": {
     "vicevearsa": "bin/vicevearsa.js"
