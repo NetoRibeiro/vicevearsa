@@ -13,3 +13,5 @@ temp/
 ./find_replace.py
 ./find_and_display.py
 ./version_update.py
+/vscode
+/vscode/*

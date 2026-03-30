@@ -38,7 +38,10 @@
       "Bash(taskkill //PID 24588 //F)",
       "mcp__Claude_Preview__preview_start",
       "mcp__playwright__browser_navigate",
-      "mcp__playwright__browser_take_screenshot"
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_evaluate",
+      "Bash(curl -s http://localhost:3000)"
     ]
   },
   "outputStyle": "default"
